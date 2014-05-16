@@ -8,17 +8,8 @@ module Transitmix
         Rack::Response.new({}, 404)
       end
 
-      helpers do
-        def line_params
-          Line::PERMITTED.reduce({}) { |model_params, attr|
-            model_params[attr] = params[attr] if params[attr]
-            model_params
-          }
-        end
-      end
-
       params do
-        requires :id, type: String
+        requires :id, type: Integer
       end
 
       get '/api/lines/:id' do
@@ -46,21 +37,19 @@ module Transitmix
       end
 
       post '/api/lines' do
-        Line.create(line_params)
+        line = Line.create(params)
       end
 
       params do
-        requires :id, type: String
+        requires :id, type: Integer
       end
 
       put '/api/lines/:id' do
-        line = Line.where(id: params[:id]).first
-        line.update(line_params)
-        line
+        Line.first!(id: params[:id]).update(params)
       end
 
       params do
-        requires :id, type: String
+        requires :id, type: Integer
       end
 
       delete '/api/lines/:id' do

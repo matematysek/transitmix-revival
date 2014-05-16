@@ -8,7 +8,6 @@ app.Map = Backbone.Model.extend({
     zoomLevel: 14,
   },
 
-  // TODO: Drop the parse and toJSON when we switch to camelcase
   parse: function(response) {
     return {
       id: response.id,
@@ -16,6 +15,7 @@ app.Map = Backbone.Model.extend({
       center: response.center,
       zoomLevel: response.zoom_level,
       lines: new app.Lines(response.lines, { parse: true }),
+      remixedFromId: response.remixed_from_id,
     };
   },
 
@@ -48,5 +48,5 @@ app.Map = Backbone.Model.extend({
 
   getSelected: function() {
     return this.selected;
-  }
+  },
 });

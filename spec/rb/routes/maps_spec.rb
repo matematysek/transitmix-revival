@@ -7,6 +7,29 @@ describe Transitmix::Routes::Maps do
     subject
   end
 
+  describe 'POST /api/maps/:id/remix' do
+    let!(:map) { create(:map) }
+    let!(:lines) { create_list(:line, 3, map_id: map.id) }
+
+    it 'responds with 201 CREATED' do
+      post "/api/maps/#{map.id}/remix"
+      expect(last_response.status).to eq 201
+    end
+ 
+    it 'creates a new map record' do
+      expect { post "/api/maps/#{map.id}/remix" }.to change { Map.count }.by(+1)
+    end
+ 
+    it 'creates a associated lines for the new map record' do
+      expect { post "/api/maps/#{map.id}/remix" }.to change { Line.count }.by(+3)
+    end
+
+    it 'returns the remixed map with lines' do
+      post "/api/maps/#{map.id}/remix"
+      expect(last_response.body).to eq Map.last.to_json
+    end
+  end
+
   describe 'GET /api/maps/:id' do
     let(:map) { create(:map) }
 
