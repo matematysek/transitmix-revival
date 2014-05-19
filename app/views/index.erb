@@ -53,6 +53,7 @@
   <script type="text/template" id="tmpl-map-sidebar-view">
     <div class="mapSidebarHeader">
       <div class="mapSidebarTitle">{{ name }}</div>
+      {[ if(remixedFromId) { ]}<div class="mapSidebarRemix">Remixed from <span class="remixedFrom">#{{ remixedFromId }}</span></div>{[ } ]}
       <div class="mapSidebarDescription">This map has {{ lineCount }} lines, covering {{ distance }} miles, costing ${{ cost }} per year.</div>
     </div>
     <div class="mapSidebarLines"></div>

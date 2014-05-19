@@ -10,6 +10,7 @@ app.MapSidebarView = Backbone.View.extend({
   events: {
     'click .addLine': 'addLine',
     'click .remix': 'remix',
+    'click .remixedFrom': 'remixedFrom',
     'click .share': 'showShare',
     'mouseleave': 'hideShare',
   },
@@ -23,7 +24,7 @@ app.MapSidebarView = Backbone.View.extend({
     // calculate total costs for the summary
     var lines = this.model.get('lines');
     if (lines.length === 0) {
-      this.$el.html(this.emptyTemplate(this.model.toJSON()));
+      this.$el.html(this.emptyTemplate(this.model.attributes));
       return this;
     }
 
@@ -43,7 +44,7 @@ app.MapSidebarView = Backbone.View.extend({
       frag.appendChild(subview.render().el);
     }, this);
 
-    var attrs = this.model.toJSON();
+    var attrs = _.clone(this.model.attributes);
     _.extend(attrs, { 
       lineCount: lines.length,
       cost: app.utils.addCommas(totalCost),
@@ -84,7 +85,12 @@ app.MapSidebarView = Backbone.View.extend({
   },
 
   remix: function() {
+    app.router.remix();
+  },
 
+  remixedFrom: function() {
+    var frag = 'map/' + this.model.get('remixedFromId');
+    app.router.navigate(frag, { trigger: true });
   },
 
   remove: function() {

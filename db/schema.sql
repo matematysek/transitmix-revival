@@ -78,7 +78,8 @@ CREATE TABLE maps (
     center text,
     zoom_level integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    remixed_from_id integer
 );
 
 

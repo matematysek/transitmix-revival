@@ -8,17 +8,16 @@ module Transitmix
         Rack::Response.new({}, 404)
       end
 
-      helpers do
-        def map_params
-          Map::PERMITTED.reduce({}) { |model_params, attr|
-            model_params[attr] = params[attr] if params[attr]
-            model_params
-          }
-        end
+      params do
+        requires :id, type: Integer
+      end
+
+      post '/api/maps/:id/remix' do
+        Map.first!(id: params[:id]).remix
       end
 
       params do
-        requires :id, type: String
+        requires :id, type: Integer
       end
 
       get '/api/maps/:id' do
@@ -41,17 +40,15 @@ module Transitmix
       end
 
       post '/api/maps' do
-        Map.create(map_params)
+        Map.create(params)
       end
 
       params do
-        requires :id, type: String
+        requires :id, type: Integer
       end
 
       put '/api/maps/:id' do
-        map = Map.where(id: params[:id]).first
-        map.update(map_params)
-        map
+        Map.first!(id: params[:id]).update(params)
       end
     end
   end

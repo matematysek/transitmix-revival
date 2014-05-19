@@ -6,7 +6,7 @@ app.Router = Backbone.Router.extend({
     '*default': 'error'
   },
 
-  initialize: function(options) {
+  initialize: function() {
     this.bind('all', this._trackPageview);
     Backbone.history.start({ pushState: true, root: '/' });
   },
@@ -44,19 +44,38 @@ app.Router = Backbone.Router.extend({
       return;
     }
 
-    var renderMap = function(model) {
-      if (this.view) this.view.remove();
-      this.view = new app.MapView({ model: model });
-      $('body').append(this.view.render().el);
-      callback(model);
-    };
+    var finishLoad = _.bind(function(map) {
+      this._renderMap(map, callback);
+    }, this);
 
     var map = new app.Map({ id: mapId });
-    map.fetch({ success: _.bind(renderMap, this)});
+    map.fetch({ success: finishLoad });
+  },
+
+  _renderMap: function(model, callback) {
+    if (this.view) this.view.remove();
+    this.view = new app.MapView({ model: model });
+    $('body').append(this.view.render().el);
+    if (callback) callback(model);
   },
 
   error: function() {
     console.log('Route not found. Mild moment of panic.');
     this.navigate('', { trigger: true });
+  },
+
+  remix: function() {
+    var finishRemix = _.bind(function(resp) {
+      var map = new app.Map(resp, { parse: true });
+
+      this._renderMap(map);
+      this.navigate('map/' + resp.id);
+
+      var message = 'Now editing a freshly-made duplicate of the original map.';
+      var notification = new app.NotificationView({ message: message });
+      $('body').append(notification.render().el);
+    }, this);
+
+    $.post('/api/maps/' + this.view.model.id + '/remix', finishRemix);
   },
 });

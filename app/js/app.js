@@ -3,6 +3,7 @@ var app = app || {};
 
 // Use mustache-style syntax for underscore templates
 _.templateSettings = {
+  evaluate: /\{\[(.+?)\]\}/g,
   interpolate: /\{\{(.+?)\}\}/g
 };
 
