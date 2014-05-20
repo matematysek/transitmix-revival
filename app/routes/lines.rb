@@ -37,7 +37,7 @@ module Transitmix
       end
 
       post '/api/lines' do
-        line = Line.create(params)
+        Line.create(params)
       end
 
       params do
