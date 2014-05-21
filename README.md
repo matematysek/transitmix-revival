@@ -1,4 +1,4 @@
-# Transitmix
+# Transitmix [![Build Status](https://travis-ci.org/codeforamerica/transitmix.svg?branch=master)](https://travis-ci.org/codeforamerica/transitmix)
 
 Transitmix is a sketching tool for transit planners (both professional and armchair) to quickly design routes and share with the public. It lives at [transitmix.net](http://transitmix.net).
 
