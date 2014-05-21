@@ -118,15 +118,15 @@ DEPENDENCIES
   dotenv
   factory_girl
   ffaker
-  grape
+  grape (~> 0.7)
   jasmine
-  pg
+  pg (~> 0.17)
   rack-test
   rake
-  rspec
-  sass
-  sequel
-  sinatra
-  sinatra-assetpack
-  uglifier
+  rspec (~> 2.14)
+  sass (~> 3.3)
+  sequel (~> 4.10)
+  sinatra (~> 1.4)
+  sinatra-assetpack (~> 0.3)
+  uglifier (~> 2.5)
   unicorn
