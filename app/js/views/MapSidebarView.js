@@ -1,7 +1,7 @@
 // View that shows all the routes drawn, and lets you jump into any of them.
 // TODO: This view is a mess. Need to clean up, seperate into files, redo CSS.
 app.MapSidebarView = Backbone.View.extend({
-  className: 'MapSidebarView',
+  className: 'mapSidebarView',
 
   template: _.template($('#tmpl-MapSidebarView').html()),
 
@@ -101,7 +101,7 @@ app.MapSidebarView = Backbone.View.extend({
 
 
 app.MapSidebarSubview = Backbone.View.extend({
-  className: 'MapSidebarSubview',
+  className: 'mapSidebarSubview',
 
   template: _.template($('#tmpl-MapSidebarSubview').html()),
 
