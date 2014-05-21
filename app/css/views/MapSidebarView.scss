@@ -1,113 +1,105 @@
-.mapSidebarView {
+.MapSidebarView {
   position: absolute;
   top: 30px;
   right: 30px;
   width: 280px;
-}
 
-.mapSidebarView>div {
-  padding: 12px 14px;
-}
+  span {
+    border-bottom: 1px dotted #7D6992;
+    color: white;
+  }
 
-.mapSidebarView span {
-  border-bottom: 1px dotted #7D6992;
-  color: white;
-}
+  span:hover {
+    cursor: pointer;
+    border-bottom: 1px dotted #F9F4FF;
+  }
 
-.mapSidebarView span:hover {
-  cursor: pointer;
-  border-bottom: 1px dotted #F9F4FF;
-}
+  header {
+    background: $primary-color;
+    padding: 16px 14px;
 
-.mapSidebarHeader {
-  background: $primary-color;
-  padding: 16px 14px !important;
-}
+    h1 {
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 36px;
+    }
 
-.mapSidebarTitle {
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 36px;
-}
+    .source {
+      margin-top: 7px;
+      margin-bottom: 9px;
+    }
 
-.mapSidebarRemix {
-  margin-top: 7px;
-  margin-bottom: 9px;
-}
+    .stats {
+      font-size: 14px;
+      line-height: 24px;
+      color: #B9B3CA;
+      margin-top: 6px;
+    }
+  }
 
-.mapSidebarDescription {
-  font-size: 14px;
-  line-height: 24px;
-  color: #B9B3CA;
-  margin-top: 6px;
-}
+  .MapSidebarSubview {
+    padding: 17px 14px;
 
-.mapSidebarActions {
-  background: $primary-color;
-  position: relative;
-  padding: 16px 14px !important;
-}
+    .name {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 16px;
+    }
 
-.mapSidebarActions .left {
-  position: relative;
-  top: -1px;
-}
+    .stats{
+      font-size: 14px;
+      line-height: 16px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 11px;
+    }
+  }
 
-.mapSidebarActions .right {
-  position: absolute;
-  right: 14px;
-  top: 15px;
-}
+  .actions {
+    background: $primary-color;
+    position: relative;
+    padding: 16px 14px;
 
-.mapSidebarActions .right span {
-  margin-left: 10px;
-}
+    .left {
+      position: relative;
+      top: -1px;
+    }
 
-.mapSidebarLines {
-  padding: 0 !important;
-}
+    .right {
+      position: absolute;
+      right: 14px;
+      top: 15px;
 
-.mapSidebarLine {
-  padding: 17px 14px;
-}
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
 
-.mapSidebarLine .lineName {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 16px;
-}
+  .sharebox {
+    background: #518A51;
+    padding: 16px 14px !important;
+    position: relative;
 
-.mapSidebarLine .lineDescription {
-  font-size: 14px;
-  line-height: 16px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 11px;
-}
+    input {
+      margin-top: 13px;
+      color: #000;
+      font-size: 13px;
+      padding: 9px;
+      width: 100%;
+      outline: 0;
+      border: none;
+    }
 
-.mapSidebarShare {
-  background: #518A51;
-  padding: 16px 14px !important;
-  position: relative;
-}
-
-.mapSidebarShare input {
-  margin-top: 13px;
-  color: #000;
-  font-size: 13px;
-  padding: 9px;
-  width: 100%;
-  outline: 0;
-  border: none;
-}
-
-.mapSidebarShare:after {
-  bottom: 100%;
-  right: 29%;
-  border: 10px solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-bottom-color: #518A51;
+    &:after {
+      bottom: 100%;
+      right: 29%;
+      border: 10px solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-bottom-color: #518A51;
+    }
+  }
 }

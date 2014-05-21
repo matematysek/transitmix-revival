@@ -1,14 +1,14 @@
 // View that shows all the routes drawn, and lets you jump into any of them.
 // TODO: This view is a mess. Need to clean up, seperate into files, redo CSS.
 app.MapSidebarView = Backbone.View.extend({
-  template: _.template($('#tmpl-map-sidebar-view').html()),
+  className: 'MapSidebarView',
 
-  emptyTemplate: _.template($('#tmpl-map-sidebar-empty-view').html()),
+  template: _.template($('#tmpl-MapSidebarView').html()),
 
-  className: 'mapSidebarView',
+  emptyTemplate: _.template($('#tmpl-MapSidebarView-empty').html()),
 
   events: {
-    'click .addLine': 'addLine',
+    'click .add': 'addLine',
     'click .remix': 'remix',
     'click .remixedFrom': 'remixedFrom',
     'click .share': 'showShare',
@@ -39,7 +39,7 @@ app.MapSidebarView = Backbone.View.extend({
       totalDistance += calcs.distance;
       totalCost += calcs.cost;
 
-      var subview = new app.mapSidebarSubview({ model: line });
+      var subview = new app.MapSidebarSubview({ model: line });
       this.subviews.push(subview);
       frag.appendChild(subview.render().el);
     }, this);
@@ -51,7 +51,7 @@ app.MapSidebarView = Backbone.View.extend({
       distance: totalDistance.toFixed(2),
     });
     this.$el.html(this.template(attrs));
-    this.$('.mapSidebarLines').append(frag);
+    this.$('.lines').append(frag);
 
     return this;
   },
@@ -73,15 +73,15 @@ app.MapSidebarView = Backbone.View.extend({
 
   showShare: function() {
     var url = window.location.origin + '/map/' + this.model.id;
-    var $inputField = this.$('.mapSidebarShare>input');
+    var $inputField = this.$('.sharebox>input');
 
     $inputField.val(url);
-    this.$('.mapSidebarShare').show();
+    this.$('.sharebox').show();
     $inputField.select();
   },
 
   hideShare: function() {
-    this.$('.mapSidebarShare').hide();
+    this.$('.sharebox').hide();
   },
 
   remix: function() {
@@ -100,8 +100,10 @@ app.MapSidebarView = Backbone.View.extend({
 });
 
 
-app.mapSidebarSubview = Backbone.View.extend({
-  template: _.template($('#tmpl-map-sidebar-subview').html()),
+app.MapSidebarSubview = Backbone.View.extend({
+  className: 'MapSidebarSubview',
+
+  template: _.template($('#tmpl-MapSidebarSubview').html()),
 
   events: {
     'click': 'select',
@@ -109,12 +111,14 @@ app.mapSidebarSubview = Backbone.View.extend({
 
   render: function() {
     var attrs = _.clone(this.model.toJSON());
-    
     var calcs = this.model.getCalculations();
+    
     calcs.distance = calcs.distance.toFixed(2);
     _.extend(attrs, calcs);
 
     this.$el.html(this.template(attrs));
+    this.$el.css({ background: attrs.color });
+
     return this;
   },
 
