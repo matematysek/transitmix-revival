@@ -37,6 +37,8 @@ module Transitmix
         requires :name, type: String
         optional :center, type: Array
         optional :zoom_level, type: String
+        optional :layover, type: Float
+        optional :hourly_cost, type: Integer
       end
 
       post '/api/maps' do

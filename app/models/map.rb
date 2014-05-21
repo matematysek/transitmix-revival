@@ -5,7 +5,7 @@ module Transitmix
       plugin :json_serializer, :include=>:lines
       plugin :serialization, :json, :center
 
-      set_allowed_columns :name, :center, :zoom_level
+      set_allowed_columns :name, :center, :zoom_level, :layover, :hourly_cost
 
       one_to_many :lines
 

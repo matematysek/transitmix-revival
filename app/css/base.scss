@@ -11,16 +11,20 @@ body {
   font-family: jaf-facitweb, sans-serif;
   font-size: 15px;
   line-height: 1;
-  text-shadow: -1px -1px 0px rgba(49, 41, 58, 0.5);
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-size: 100%;
+  font-weight: normal;
 }
 
 /* Don't show bluebox around contenteditable in WebKit */
 [contenteditable]:focus {
   outline: 0px solid transparent;
+}
+
+[contenteditable]:hover {
+  cursor: pointer;
 }
 
 #map {

@@ -7,7 +7,7 @@ describe Map do
   end
 
   it 'whitelists mass-assignable columns' do
-    expect(Map.allowed_columns).to eq [:name, :center, :zoom_level]
+    expect(Map.allowed_columns).to eq [:name, :center, :zoom_level, :layover, :hourly_cost]
   end
 
   describe '.remix' do

@@ -4,9 +4,10 @@ module Transitmix
       plugin :timestamps, update_on_create: true
       plugin :json_serializer
       plugin :serialization, :json, :coordinates
+      plugin :serialization, :json, :service_windows
 
-      set_allowed_columns :coordinates, :name, :description, :start_time,
-                          :end_time, :frequency, :speed, :color, :map_id
+      set_allowed_columns :coordinates, :name, :speed, :color, :map_id, 
+                          :service_windows
     end
   end
 end

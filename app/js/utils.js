@@ -194,3 +194,18 @@ app.utils.closestPointInRoute = function(arr, point) {
 app.utils.addCommas = function(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
+
+// Simple utility to calculate the difference, in minutes, between two hours
+// formatted as either military time (23:00) or standard time (11pm). Does not
+// work hours that cross day-boundries (e.g. 11pm to 1am).
+app.utils.diffTime = function(from, to) {
+  var minutesIntoDay = function(time) {
+    var hours = parseInt(time.split(':')[0], 10);
+    if (time.indexOf('pm') > -1 || time.indexOf('p') > -1) hours += 12;
+    var minutes = 0;
+    if (time.indexOf(':') > -1) minutes = parseInt(time.split(':')[1], 10);
+    return hours * 60 + minutes;
+  };
+
+  return (minutesIntoDay(to) - minutesIntoDay(from));
+};

@@ -13,45 +13,62 @@ app.Line = Backbone.Model.extend({
     var names = app.DEFAULT_LINE_NAMES;
     var randomName = _.random(10, 99) + ' ' + _.sample(names);
 
+    var serviceWindows = new app.ServiceWindows([
+      { name: 'AM Peak', from: '7am', to: '10am', headway: '12' },
+      { name: 'Midday', from: '10am', to: '4pm', headway: '20' },
+      { name: 'PM Peak', from: '4pm', to: '8pm', headway: '12' },
+      { name: 'Evening', from: '8pm', to: '11pm', headway: '30' },
+      { name: 'Weekend', from: '8am', to: '11pm', headway: '30', isWeekend: true },
+    ]);
+
     return {
-      name: randomName,
-      description: 'Click to add description.',
-      frequency: 15,
-      speed: 12,
-      startTime: '8am',
-      endTime: '8pm',
       color: randomColor,
       coordinates: [], // A GeoJSON MultiLineString
+      mapId: undefined,
+      name: randomName,
+      serviceWindows: serviceWindows,
+      speed: 12,
     };
   },
 
-  // TODO: Drop the parse and toJSON when we switch to camelcase
+  initialize: function() {
+    // Automatically save after changes, at most once per second
+    var debouncedSaved = _.debounce(function() { this.save(); }, 1000);
+    this.on('change', debouncedSaved, this);
+    this.get('serviceWindows').on('change', debouncedSaved, this);
+  },
+
   parse: function(response) {
-    response.startTime = response.start_time;
-    delete response.start_time;
+    // Use any existing nested models; create them otherwise.
+    var serviceWindows = this.get('serviceWindows');
+    if (!serviceWindows) {
+      serviceWindows = new app.ServiceWindows(response.service_windows);
+    }
 
-    response.endTime = response.end_time;
-    delete response.end_time;
-
-    response.mapId = response.map_id;
-    delete response.map_id;
-
-    return response;
+    return {
+      id: response.id,
+      color: response.color,
+      coordinates: response.coordinates,
+      mapId: response.map_id,
+      name: response.name,
+      serviceWindows: serviceWindows,
+      speed: response.speed,
+    };
   },
 
   toJSON: function() {
-    var attr = _.clone(this.attributes);
+    var attrs = this.attributes;
+    var serviceWindows = attrs.serviceWindows.toJSON();
 
-    attr.start_time = attr.startTime;
-    // delete attr.startTime;
-
-    attr.end_time = attr.endTime;
-    // delete attr.endTime;
-
-    attr.map_id = attr.mapId;
-    // delete attr.mapId;
-
-    return attr;
+    return {
+      id: attrs.id,
+      color: attrs.color,
+      coordinates: attrs.coordinates,
+      map_id: attrs.mapId,
+      name: attrs.name,
+      service_windows: serviceWindows,
+      speed: attrs.speed,
+    };
   },
 
   // Extends the line to the given latlng, routing in-between
@@ -185,45 +202,45 @@ app.Line = Backbone.Model.extend({
   },
 
   getCalculations: function() {
-    var coordinates = this.get('coordinates');
-    var flat = _.flatten(coordinates, true);
+    var attrs = this.attributes;
+    var speed = attrs.speed;
+    var latlngs = _.flatten(attrs.coordinates, true);
+    var distance = app.utils.calculateDistance(latlngs);
 
-    var distance = app.utils.calculateDistance(flat);
-    var speed = this.get('speed') / 60; // Miles per minute
-    var frequency = this.get('frequency');
+    var map = this.collection.map;
+    var layover = map.get('layover');
+    var hourlyCost = map.get('hourlyCost');
 
-    // TODO: Deal with javascript's lack of good date libs in a better way...
-    // This doens't handle overnight hours, or probably a dozen other cases.
-    // But Eric Ries told me this is a-ok.
-    var minutesIntoDay = function(time) {
-      var hours = parseInt(time.split(':')[0], 10);
-      if (time.indexOf('pm') > -1) hours += 12;
-      var minutes = 0;
-      if (time.indexOf(':') > -1) minutes = parseInt(time.split(':')[1], 10);
-      return hours * 60 + minutes;
+    var calculate = function(sw) {
+      var hoursPerDay = app.utils.diffTime(sw.get('from'), sw.get('to')) / 60;
+      var roundTripTime = (distance / speed) * (1 + layover) * 60;
+      var buses = Math.ceil(roundTripTime / sw.get('headway'));
+
+      var daysPerYear = sw.isWeekend ? 110 : 255;
+      var revenueHours = buses * hoursPerDay * daysPerYear;
+
+      var costPerYear = revenueHours * hourlyCost;
+
+      return {
+        buses: buses,
+        cost: costPerYear,
+        revenueHours: revenueHours,
+      };
     };
 
-    var startTime = this.get('startTime');
-    var endTime = this.get('endTime');
-    var hoursPerDay = (minutesIntoDay(endTime) - minutesIntoDay(startTime)) / 60;
-
-
-    // Hardcoded assumptions. 
-    // TODO: Allow users to config these numbers, at some level. 
-    var LAYOVER_PERCENTAGE = 0.10;
-    var COST_PER_REVENUE_HOUR = 125;
-    var SERVICE_DAYS = 255;
-
-    var roundTripTime = (distance / speed) * (1 + LAYOVER_PERCENTAGE);
-    // Can you have half a bus? Do we need to ceiling this next value?
-    var busesRequired = Math.ceil(roundTripTime / frequency); 
-    var revenueHoursPerDay = busesRequired * hoursPerDay;
-    var yearlyCost = revenueHoursPerDay * SERVICE_DAYS * COST_PER_REVENUE_HOUR;
+    var perWindow = attrs.serviceWindows.map(calculate);
+    var total = _.reduce(perWindow, function(memo, sw) {
+      return {
+        buses: Math.max(memo.buses || 0, sw.buses),
+        cost: (memo.cost || 0) + sw.cost,
+        revenueHours: (memo.revenueHours || 0) + sw.revenueHours
+      };
+    });
 
     return {
-      busesRequired: busesRequired,
       distance: distance,
-      cost: yearlyCost,
+      perWindow: perWindow,
+      total: total
     };
   },
 });

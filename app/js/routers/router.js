@@ -25,38 +25,43 @@ app.Router = Backbone.Router.extend({
   },
 
   map: function(mapId) {
-    this._loadMap(mapId, function(model) {
-      model.unselect();
-    });
+    this._loadMap(mapId);
   },
 
   line: function(mapId, lineId) {
-    this._loadMap(mapId, function(model) {
-      model.select(lineId);
-    });
+    this._loadMap(mapId, lineId);
   },
 
-  _loadMap: function(mapId, callback) {
+  _loadMap: function(mapId, lineId) {
     // If we already have a view with the apropriate model, we just need
     // to handle the select/unselect events, and skip data load / view rendering
     if (this.view && this.view.model && this.view.model.id.toString() === mapId) {
-      callback(this.view.model);
+      var existingMap = this.view.model;
+      this._toggleSelect(existingMap, lineId);
       return;
     }
 
     var finishLoad = _.bind(function(map) {
-      this._renderMap(map, callback);
+      this._toggleSelect(map, lineId);
+      this._renderMap(map);
     }, this);
 
     var map = new app.Map({ id: mapId });
     map.fetch({ success: finishLoad });
   },
 
-  _renderMap: function(model, callback) {
+  _toggleSelect: function(map, lineId) {
+    if (lineId) {
+      map.select(lineId);
+    } else {
+      map.unselect();
+    }
+  },
+
+  _renderMap: function(model) {
     if (this.view) this.view.remove();
     this.view = new app.MapView({ model: model });
     $('body').append(this.view.render().el);
-    if (callback) callback(model);
   },
 
   error: function() {
