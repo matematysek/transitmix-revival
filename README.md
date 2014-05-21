@@ -70,16 +70,31 @@ heroku run rake db:migrate
 heroku open
 ```
 
-### Various Setup Notes
-* Install PostGres via `brew install postgres`, event if you have Postgres.app otherwise bundle install will keep failing.
-* If you wish to work on Sinatra and want auto-reload per file change:
+## Additional Setup Notes
+
+### Troubleshooting Postgres.app issues
+
+If you have trouble with Postgres.app, make sure you have [your $PATH set correctly](http://postgresapp.com/documentation/).
+
+### Automatic Reloads
+
+To auto-reload after each change:
 
 ```
 gem install rerun
 rerun 'bundle exec rackup'
 ```
 
-### Tests
+### Developing Under Windows
+
+- Install [Virtual Box](https://www.virtualbox.org/)
+- Install [Vagrant](http://www.vagrantup.com/)
+- Clone and build a [rails-dev-box](https://github.com/rails/rails-dev-box) vagrant box
+- Modify the postgres password to `vagrant` using these [instructions](http://www.postgresql.org/message-id/006201c74b23$17cce130$9b0014ac@wbaus090)
+- Modify the .env file with the line `DATABASE_URL=postgres://vagrant:vagrant@localhost/transitmix_development`
+- Continue with standard development steps, using your fancy new vagrant box 
+
+### Testing References
 
 * Javascript: [Jasmine](http://jasmine.github.io/)
 * Ruby: [RSpec](https://www.relishapp.com/rspec)
