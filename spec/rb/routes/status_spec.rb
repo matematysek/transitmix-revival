@@ -1,11 +1,7 @@
 require './spec/rb/spec_helper.rb'
 
 describe Transitmix::Routes::Status do
-  include Rack::Test::Methods
-
-  def app
-    Transitmix::Routes::Status
-  end
+  include Transitmix::Routes::TestHelpers
 
   it 'returns the application status' do
     get '/.well-known/status'

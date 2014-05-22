@@ -1,11 +1,7 @@
 require './spec/rb/spec_helper.rb'
 
 describe Transitmix::Routes::Maps do
-  include Rack::Test::Methods
-
-  def app
-    subject
-  end
+  include Transitmix::Routes::TestHelpers
 
   describe 'POST /api/maps/:id/remix' do
     let!(:map) { create(:map) }
