@@ -14,8 +14,6 @@ require 'sinatra/assetpack'
 require 'sinatra-sequel'
 require 'grape'
 
-Dir['./lib/validators/**/*.rb'].each { |f| require(f) }
-
 require 'app/routes'
 
 module Transitmix
