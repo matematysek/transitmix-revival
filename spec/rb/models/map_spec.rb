@@ -1,6 +1,15 @@
 require './spec/rb/spec_helper.rb'
 
 describe Map do
+  it 'has many lines' do
+    type = Map.association_reflections[:lines][:type]
+    expect(type).to eq :one_to_many
+  end
+
+  it 'whitelists mass-assignable columns' do
+    expect(Map.allowed_columns).to eq [:name, :center, :zoom_level]
+  end
+
   describe '.remix' do
     it 'creates a copy of the map and lines' do
       map = create(:map)
