@@ -6,7 +6,7 @@ describe Transitmix::Routes::Lines do
   describe 'GET /api/lines/:id' do
     let(:line) { create(:line) }
 
-    it 'is successful' do
+    it 'responds with 200 OK' do
       get "/api/lines/#{line.id}"
       expect(last_response.status).to eq 200
     end
@@ -16,17 +16,19 @@ describe Transitmix::Routes::Lines do
       expect(last_response.body).to eq line.to_json
     end
 
-    it 'is not found' do
-      max = Line.max(:id) || 0
-      get "/api/lines/#{ max + 1 }"
-      expect(last_response.status).to eq 404
+    context 'not found' do
+      it 'responds with 404 NOT FOUND' do
+        max = Line.max(:id) || 0
+        get "/api/lines/#{ max + 1 }"
+        expect(last_response.status).to eq 404
+      end
     end
   end
 
   describe 'POST /api/lines' do
     let(:params) { attributes_for(:line) }
 
-    it 'is successful' do
+    it 'responds with 201 CREATED' do
       post '/api/lines', params
       expect(last_response.status).to eq 201
     end
@@ -37,7 +39,7 @@ describe Transitmix::Routes::Lines do
   end
 
   describe 'GET /api/lines' do
-    it 'is sucessful' do
+    it 'responds with 200 OK' do
       get '/api/lines'
       expect(last_response.status).to eq 200
     end
@@ -52,7 +54,7 @@ describe Transitmix::Routes::Lines do
   describe 'DELETE /api/lines' do
     let!(:line) { create(:line) }
 
-    it 'is sucessful' do
+    it 'responds with 200 OK' do
       delete "/api/lines/#{ line.id }"
       expect(last_response.status).to eq 200
     end
