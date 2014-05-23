@@ -29,7 +29,7 @@ describe Transitmix::Routes::Maps do
   describe 'GET /api/maps/:id' do
     let(:map) { create(:map) }
 
-    it 'is successful' do
+    it 'responds with 200 OK' do
       get "/api/maps/#{map.id}"
       expect(last_response.status).to eq 200
     end
@@ -39,17 +39,19 @@ describe Transitmix::Routes::Maps do
       expect(last_response.body).to eq map.to_json
     end
 
-    it 'is not found' do
-      missing_id = (Map.dataset.max(:id) || 0) + 1
-      get "/api/maps/#{missing_id}"
-      expect(last_response.status).to eq 404
+    context 'not found' do
+      it 'responds with 404 NOT FOUND' do
+        max_id = Map.max(:id) || 0
+        get "/api/maps/#{max_id + 1}"
+        expect(last_response.status).to eq 404
+      end
     end
   end
 
   describe 'POST /api/maps' do
     let(:params) { attributes_for(:map) }
 
-    it 'is successful' do
+    it 'responds with 201 CREATED' do
       post '/api/maps', params
       expect(last_response.status).to eq 201
     end
@@ -57,10 +59,15 @@ describe Transitmix::Routes::Maps do
     it 'creates a new record' do
       expect { post '/api/maps', params }.to change{ Map.count }.by(+1)
     end
+
+    it 'returns the new record' do
+      post 'api/maps', params
+      expect(last_response.body).to eq Map.last.to_json
+    end
   end
 
   describe 'GET /api/maps' do
-    it 'is successful' do
+    it 'responds with 200 OK' do
       get '/api/maps'
       expect(last_response.status).to eq 200
     end
