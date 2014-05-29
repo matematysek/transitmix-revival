@@ -56,7 +56,7 @@ app.LineSidebarView = Backbone.View.extend({
       '.hourlyCost': {
         observe: 'hourlyCost',
         onGet: function(val) { return '$' + val; },
-        onSet: function(val) { return parseInt(val, 10); },
+        onSet: function(val) { return parseInt(val.replace(/\D/g, ''), 10); },
       }
     });
 
