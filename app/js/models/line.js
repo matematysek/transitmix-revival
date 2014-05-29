@@ -27,7 +27,7 @@ app.Line = Backbone.Model.extend({
       mapId: undefined,
       name: randomName,
       serviceWindows: serviceWindows,
-      speed: 12,
+      speed: 10,
     };
   },
 
