@@ -4,15 +4,21 @@
   right: 30px;
   width: 280px;
 
-  [contenteditable] {
+  input {
+    background: transparent;
     color: white;
+    border: none;
     border-bottom: 1px dotted rgba(255, 255, 255, 0.3);
-    padding: 0 3px;
-    margin: 0 -3px;
+    padding-bottom: 2px;
   }
 
-  [contenteditable]:hover {
+  input:hover {
     border-bottom: 1px dotted rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+  }
+
+  input:focus {
+    outline: none;
   }
 
   nav {
@@ -116,7 +122,7 @@
     }
 
     .headway {
-      min-width: 40px;
+      width: 54px;
     }
   }
 
@@ -180,9 +186,16 @@
       width: 12px;
     }
 
-    [contenteditable] {
-      min-width: 40px;
-      display: inline-block;
+    .speed {
+      width: 90px;
+    }
+
+    .layover {
+      width: 50px;
+    }
+
+    .hourlyCost {
+      width: 60px;
     }
   }
 

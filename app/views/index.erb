@@ -128,22 +128,22 @@
 
     <div class="outputs advancedOutputs busOutputs" style="background: {{ color3 }}">
       <h2>Bus assumptions:</h2>
-      <span class="speed" contenteditable="true">12 mph</span> average speed<br/>
-      <span class="layover" contenteditable="true">10%</span> turn around time<br/>
+      <input type="text" class="speed"> average speed<br/>
+      <input type="text" class="layover"> turn around time<br/>
     </div>
 
     <div class="outputs advancedOutputs costOutputs" style="background: {{ color3 }}">
       <h2>Yearly operating cost:</h2>
       <span class="revenueHours">4504 hours</span> bus time<br/>
-      x <span class="hourlyCost" contenteditable="true">$120</span> per hour<br/>
+      x <input type="text" class="hourlyCost"> per hour<br/>
     </div>
   </script>
 
   <script type="text/template" id="tmpl-ServiceWindowView">
     <span class="windowName"></span>
-    <span contenteditable="true" class="from"></span>
-    <span contenteditable="true" class="to"></span>
-    <span contenteditable="true" class="headway"></span>
+    <input type="text" class="from"></span>
+    <input type="text" class="to"></span>
+    <input type="text" class="headway"></span>
   </script>
 
   <!-- libs -->
