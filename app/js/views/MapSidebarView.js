@@ -1,5 +1,4 @@
 // View that shows all the routes drawn, and lets you jump into any of them.
-// TODO: This view is a mess. Need to clean up, seperate into files, redo CSS.
 app.MapSidebarView = Backbone.View.extend({
   className: 'mapSidebarView',
 
@@ -31,13 +30,15 @@ app.MapSidebarView = Backbone.View.extend({
     var frag = document.createDocumentFragment();
     var totalDistance = 0;
     var totalCost = 0;
+    var totalBuses = 0;
 
     lines.forEach(function(line) {
       var calcs = line.getCalculations();
 
       // TODO: Give the map model a function to compute it's summary statistics
       totalDistance += calcs.distance;
-      totalCost += calcs.cost;
+      totalCost += calcs.total.cost;
+      totalBuses += calcs.total.buses;
 
       var subview = new app.MapSidebarSubview({ model: line });
       this.subviews.push(subview);
@@ -49,6 +50,7 @@ app.MapSidebarView = Backbone.View.extend({
       lineCount: lines.length,
       cost: app.utils.addCommas(totalCost),
       distance: totalDistance.toFixed(2),
+      buses: totalBuses,
     });
     this.$el.html(this.template(attrs));
     this.$('.lines').append(frag);
@@ -114,6 +116,7 @@ app.MapSidebarSubview = Backbone.View.extend({
     var calcs = this.model.getCalculations();
     
     calcs.distance = calcs.distance.toFixed(2);
+    calcs.totalCost = app.utils.addCommas(calcs.total.cost);
     _.extend(attrs, calcs);
 
     this.$el.html(this.template(attrs));

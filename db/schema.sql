@@ -35,17 +35,14 @@ SET default_with_oids = false;
 
 CREATE TABLE lines (
     name text,
-    description text,
-    start_time text,
-    end_time text,
-    frequency integer,
     speed integer,
     color text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     coordinates text,
     map_id integer,
-    id integer NOT NULL
+    id integer NOT NULL,
+    service_windows text
 );
 
 
@@ -79,7 +76,9 @@ CREATE TABLE maps (
     zoom_level integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    remixed_from_id integer
+    remixed_from_id integer,
+    layover double precision,
+    hourly_cost integer
 );
 
 

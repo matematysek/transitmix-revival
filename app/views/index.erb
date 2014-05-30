@@ -56,7 +56,7 @@
       {# if (remixedFromId) { #}
         <div class="source">Remixed from <span class="remixedFrom">#{{ remixedFromId }}</span></div>
       {# } #}
-      <div class="stats">This map has {{ lineCount }} lines, covering {{ distance }} miles, costing ${{ cost }} per year.</div>
+      <div class="stats">This map: {{ lineCount }} lines, {{ distance }} miles, ${{ cost }} per year, {{ buses }} buses at peak</div>
     </header>
 
     <div class="lines">
@@ -90,34 +90,60 @@
 
   <script type="text/template" id="tmpl-MapSidebarSubview">
     <div class="name">{{ name }}</div>
-    <div class="stats">{{ distance }} miles • every {{ frequency }} min • {{ busesRequired }} buses</div>
+    <div class="stats">{{ distance }} miles • {{ total.buses }} buses • ${{ totalCost }}</div>
   </script>
 
-  <script type="text/template" id="tmpl-line-sidebar-view">
-    <div class="nav">
-      <div class="navHome">&#8592; Map</div>
-      <div class="navRight">
-        <div class="navNew">Add a Line</div>
-        <div class="navDelete">Delete</div>
+  <script type="text/template" id="tmpl-LineSidebarView">
+    <nav>
+      <div class="back">&#8592; Map</div>
+      <div class="right">
+        <div class="add">Add a Line</div>
+        <div class="delete">Delete</div>
+      </div>
+    </nav>
+
+    <header style="background: {{ color }}">
+      <div class="name" contenteditable="true"><!-- dynamically inserted --></div>
+    </header>
+
+    <div class="serviceWindows" style="background: {{ color2 }};">
+      <div class="columns">
+        <span class="windowName"></span>
+        <span class="from">From</span> 
+        <span class="to">To</span>
+        <span class="headway">Every</span>
+      </div>
+
+      <div class="windows">
+        <!-- dynamically inserted -->
       </div>
     </div>
 
-    <div class="lineHeader" style="background: {{ color }}">
-      <div class="lineName" contenteditable="true">48 Bravo</div>
-      <div class="lineDescription" contenteditable="true">This line is modeled after my childhood dream of a line between the mission and golden gate park.</div>
+    <div class="outputs" style="background: {{ color3 }}">
+      <h2>This line:</h2>
+      <span class="distance">0 miles</span><br/>
+      <span class="buses">0 buses</span> at peak <span class="showBusOutputs"></span><?xml version="1.0" encoding="utf-8"?><br/>
+      <span class="cost">$0</span> / year <span class="showCostOutputs"></span>
     </div>
 
-    <div class="lineVariables" style="background: {{ color2 }}">
-      Arrives every <span class="lineFrequency" contenteditable="true">30</span> minutes,<br/>
-      traveling at <span class="lineSpeed" contenteditable="true">25</span> miles per hour,<br/>
-      from <span class="lineStartTime" contenteditable="true">8am</span> to <span class="lineEndTime" contenteditable="true">8pm</span>.
+    <div class="outputs advancedOutputs busOutputs" style="background: {{ color3 }}">
+      <h2>Bus assumptions:</h2>
+      <input type="text" class="speed"> average speed<br/>
+      <input type="text" class="layover"> turn around time<br/>
     </div>
 
-    <div class="lineCalculations" style="background: {{ color3 }}">
-      This line is <span class="lineDistance">0 miles</span>,<br/>
-      requires <span class="lineBuses">0 buses</span>,<br/>
-      and costs <span class="lineCost">$0</span> per year.
+    <div class="outputs advancedOutputs costOutputs" style="background: {{ color3 }}">
+      <h2>Yearly operating cost:</h2>
+      <span class="revenueHours">4504 hours</span> bus time<br/>
+      x <input type="text" class="hourlyCost"> per hour<br/>
     </div>
+  </script>
+
+  <script type="text/template" id="tmpl-ServiceWindowView">
+    <span class="windowName"></span>
+    <input type="text" class="from"></span>
+    <input type="text" class="to"></span>
+    <input type="text" class="headway"></span>
   </script>
 
   <!-- libs -->

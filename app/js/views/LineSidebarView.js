@@ -1,38 +1,36 @@
 app.LineSidebarView = Backbone.View.extend({
   className: 'lineSidebarView',
-  template: _.template($('#tmpl-line-sidebar-view').html()),
+  template: _.template($('#tmpl-LineSidebarView').html()),
 
   bindings: {
-    '.lineName': 'name',
-    '.lineDescription': 'description',
-    '.lineFrequency': {
-      observe: 'frequency',
-      onSet: function(val) { return parseInt(val, 10); },
-    },
-    '.lineSpeed':{
+    '.name': 'name',
+    '.speed': {
       observe: 'speed',
+      onGet: function(val) { return val+ ' mph'; },
       onSet: function(val) { return parseInt(val, 10); },
     },
-    '.lineStartTime': 'startTime',
-    '.lineEndTime': 'endTime',
   },
 
   events: {
-    'click .navHome': 'unselect',
-    'click .navNew': 'addLine',
-    'click .navDelete': 'delete',
-    // Disable select-all-text-on-click. Need to user test this.
-    // 'focus [contenteditable]': 'selectAllText',
+    'click .back': 'unselect',
+    'click .add': 'addLine',
+    'click .delete': 'delete',
+    'click .showBusOutputs': 'showBusOutputs',
+    'click .showCostOutputs': 'showCostOutputs',
+    'mouseleave': 'hideOutputs',
     'keydown': 'preventNewline',
   },
 
   initialize: function() {
-    this.listenTo(this.model, 'change:coordinates', this.updateCalculations);
-    this.listenTo(this.model, 'change', this.updateCalculations);
+    var serviceWindows = this.model.get('serviceWindows');
+    var map = this.model.collection.map;
 
-    // Save to the server when StickIt chances the underlying model
-    var debouncedSave = _.debounce(this.save, 1500, { leading: false });
-    this.listenTo(this.model, 'change', debouncedSave);
+    this.listenTo(map, 'change', this.updateCalculations);
+    this.listenTo(this.model, 'change', this.updateCalculations);
+    this.listenTo(serviceWindows, 'change', this.updateCalculations);
+
+    // Save references to the ServiceWindowViews for later cleanup
+    this.subviews = [];
   },
 
   render: function() {
@@ -47,19 +45,52 @@ app.LineSidebarView = Backbone.View.extend({
     this.updateCalculations();
     this.stickit();
 
+    // Bind to map-level attributes
+    var map = this.model.collection.map;
+    this.stickit(map, {
+      '.layover': {
+        observe: 'layover',
+        onGet: function(val) { return val*100 + '%'; },
+        onSet: function(val) { return parseInt(val, 10) / 100; },
+      },
+      '.hourlyCost': {
+        observe: 'hourlyCost',
+        onGet: function(val) { return '$' + val; },
+        onSet: function(val) { return parseInt(val.replace(/\D/g, ''), 10); },
+      }
+    });
+
+    // Render ServiceWindowsViews and insert into DOM
+    var frag = document.createDocumentFragment();
+    this.model.get('serviceWindows').each(function(serviceWindow) {
+      var serviceWindowView = new app.ServiceWindowView({
+        model: serviceWindow
+      });
+
+      this.subviews.push(serviceWindowView);
+      frag.appendChild(serviceWindowView.render().el);
+    }, this);
+    this.$('.windows').html(frag);
+
     return this;
   },
 
   updateCalculations: function() {
     var calcs = this.model.getCalculations();
-    this.$('.lineDistance').html(calcs.distance.toFixed(2) + ' miles');
+    this.$('.distance').html(calcs.distance.toFixed(2) + ' miles');
 
-    var cost = calcs.cost.toFixed(0);
-    // Crazy internet regex to add commas numbers
-    cost = app.utils.addCommas(cost);
-    this.$('.lineCost').html('$' + cost);
+    var cost = calcs.total.cost;
+    if (_.isNaN(cost)) {
+      cost = 'Error';
+    } else {
+      cost = '$' + app.utils.addCommas(cost.toFixed(0));
+    }
+    this.$('.cost').html(cost);
 
-    this.$('.lineBuses').html(calcs.busesRequired + ' buses');
+    this.$('.buses').html(calcs.total.buses + ' buses');
+
+    var revenueHours = app.utils.addCommas(calcs.total.revenueHours);
+    this.$('.revenueHours').html(revenueHours + ' hours');
   },
 
   save: function(model, options) {
@@ -70,14 +101,6 @@ app.LineSidebarView = Backbone.View.extend({
 
   unselect: function() {
     app.router.navigate('map/' + this.model.get('mapId'), { trigger: true });
-  },
-
-  // Select all text in a contentEditable field. Need to _.defer for 
-  // WebKit, which receives the focus event before the cursor is inserted.
-  selectAllText: function() {
-    _.defer(function() {
-      document.execCommand('selectAll', false, null);
-    });
   },
 
   preventNewline: function(event) {
@@ -104,8 +127,23 @@ app.LineSidebarView = Backbone.View.extend({
     app.router.navigate(fragment, { trigger: true });
   },
 
+  showBusOutputs: function() {
+    $('.busOutputs').toggle();
+    $('.costOutputs').hide();
+  },
+
+  showCostOutputs: function() {
+    $('.costOutputs').toggle();
+    $('.busOutputs').hide();
+  },
+
+  hideOutputs: function() {
+    $('.busOutputs').hide();
+    $('.costOutputs').hide();
+  },
+
   remove: function() {
-    this.model.save();
+    this.subviews.map(function(subview) { subview.remove(); });
     Backbone.View.prototype.remove.apply(this, arguments);
   },
 });

@@ -2,6 +2,7 @@ require 'dotenv'
 Dotenv.load
 
 require 'dedent'
+require 'shellwords'
 require 'uri'
 
 require_relative '../app'
@@ -27,12 +28,16 @@ module DatabaseHelper
     app.database
   end
 
+  def app_root
+    Shellwords.shellescape(app.root)
+  end
+
   def migration_path
-    @migration_path ||= File.join(app.root, 'db/migrations')
+    @migration_path ||= File.join(app_root, 'db/migrations')
   end
 
   def schema_path
-    @schema_path ||= File.join(app.root, 'db/schema.sql')
+    @schema_path ||= File.join(app_root, 'db/schema.sql')
   end
 
   def db_name
@@ -66,6 +71,7 @@ module DatabaseHelper
   end
 
   def drop_db
+    Sequel::Model.db.disconnect
     pg_command("dropdb #{db_name}")
   end
 

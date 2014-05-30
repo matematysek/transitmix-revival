@@ -27,13 +27,10 @@ module Transitmix
 
       params do
         requires :name, type: String
-        requires :description, type: String
         requires :coordinates, type: Array
-        optional :start_time, type: String
-        optional :end_time, type: String
-        optional :frequency, type: Integer
         optional :speed, type: Integer
         optional :color, type: String
+        optional :service_windows, type: Array
       end
 
       post '/api/lines' do
