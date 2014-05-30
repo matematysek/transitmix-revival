@@ -212,7 +212,10 @@ app.Line = Backbone.Model.extend({
     var hourlyCost = map.get('hourlyCost');
 
     var calculate = function(sw) {
-      var hoursPerDay = app.utils.diffTime(sw.get('from'), sw.get('to')) / 60;
+      var minutesPerDay = app.utils.diffTime(sw.get('from'), sw.get('to'));
+      if (minutesPerDay < 0) minutesPerDay = NaN;
+
+      var hoursPerDay =  minutesPerDay / 60;
       var roundTripTime = (distance / speed) * (1 + layover) * 60;
       var buses = Math.ceil(roundTripTime / sw.get('headway'));
 
@@ -231,11 +234,11 @@ app.Line = Backbone.Model.extend({
     var perWindow = attrs.serviceWindows.map(calculate);
     var total = _.reduce(perWindow, function(memo, sw) {
       return {
-        buses: Math.max(memo.buses || 0, sw.buses),
-        cost: (memo.cost || 0) + sw.cost,
-        revenueHours: (memo.revenueHours || 0) + sw.revenueHours
+        buses: Math.max(memo.buses, sw.buses),
+        cost: memo.cost + sw.cost,
+        revenueHours: memo.revenueHours + sw.revenueHours
       };
-    });
+    }, { buses: 0, cost: 0, revenueHours: 0 });
 
     return {
       distance: distance,

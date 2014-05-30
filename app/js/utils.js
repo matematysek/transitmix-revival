@@ -207,5 +207,6 @@ app.utils.diffTime = function(from, to) {
     return hours * 60 + minutes;
   };
 
-  return (minutesIntoDay(to) - minutesIntoDay(from));
+  var diff = (minutesIntoDay(to) - minutesIntoDay(from));
+  return diff;
 };
