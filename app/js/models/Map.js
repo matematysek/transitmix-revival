@@ -20,7 +20,7 @@ app.Map = Backbone.Model.extend({
   parse: function(response) {
     // Use any existing nested models; create them otherwise.
     var lines = this.get('lines');
-    if (!lines) {
+    if (!lines && response.lines) {
       lines = new app.Lines(response.lines, { parse: true });
       lines.map = this;
     }

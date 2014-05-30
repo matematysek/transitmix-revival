@@ -41,7 +41,7 @@ app.Line = Backbone.Model.extend({
   parse: function(response) {
     // Use any existing nested models; create them otherwise.
     var serviceWindows = this.get('serviceWindows');
-    if (!serviceWindows) {
+    if (!serviceWindows && response.service_windows) {
       serviceWindows = new app.ServiceWindows(response.service_windows);
     }
 
