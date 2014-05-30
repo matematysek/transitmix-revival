@@ -31,7 +31,7 @@ Ideally, a bug report should include a pull request with failing specs.
 1. [Fork the repository.][fork]
 2. [Create a topic branch.][branch]
 3. Add specs for your unimplemented feature or bug fix.
-4. Run `bundle exec rake spec`. If your specs pass, return to step 3.
+4. Run `bundle exec rake`. If your specs pass, return to step 3.
 5. Implement your feature or bug fix.
 6. Run `bundle exec rake`. If your specs fail, return to step 5.
 7. Add documentation for your feature or bug fix.
