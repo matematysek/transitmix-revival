@@ -25,7 +25,7 @@ app.Map = Backbone.Model.extend({
       lines.map = this;
     }
 
-    return {
+    var attrs = {
       id: response.id,
       center: response.center,
       hourlyCost: response.hourly_cost,
@@ -35,6 +35,8 @@ app.Map = Backbone.Model.extend({
       remixedFromId: response.remixed_from_id,
       zoomLevel: response.zoom_level,
     };
+
+    return app.utils.removeUndefined(attrs);
   },
 
   toJSON: function() {

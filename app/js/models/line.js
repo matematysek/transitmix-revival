@@ -45,7 +45,7 @@ app.Line = Backbone.Model.extend({
       serviceWindows = new app.ServiceWindows(response.service_windows);
     }
 
-    return {
+    var attrs = {
       id: response.id,
       color: response.color,
       coordinates: response.coordinates,
@@ -54,6 +54,8 @@ app.Line = Backbone.Model.extend({
       serviceWindows: serviceWindows,
       speed: response.speed,
     };
+
+    return app.utils.removeUndefined(attrs);
   },
 
   toJSON: function() {

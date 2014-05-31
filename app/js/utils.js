@@ -208,6 +208,13 @@ app.utils.diffTime = function(from, to) {
   };
 
   var diff = (minutesIntoDay(to) - minutesIntoDay(from));
-  console.log(diff);
   return diff;
+};
+
+// Removes undefined and null values from an object
+app.utils.removeUndefined = function(object) {
+  return _.reduce(object, function(memo, val, key) {
+    if(val !== undefined && val !== null) memo[key] = val;
+    return memo;
+  }, {});
 };
