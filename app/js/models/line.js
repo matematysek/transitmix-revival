@@ -9,11 +9,11 @@ app.Line = Backbone.Model.extend({
     var name = _.random(10, 99) + ' ' + _.sample(app.DEFAULT_LINE_NAMES);
 
     var serviceWindows = new app.ServiceWindows([
-      { name: 'AM Peak', from: '7am', to: '10am', headway: '12' },
-      { name: 'Midday', from: '10am', to: '4pm', headway: '20' },
-      { name: 'PM Peak', from: '4pm', to: '8pm', headway: '12' },
-      { name: 'Evening', from: '8pm', to: '11pm', headway: '30' },
-      { name: 'Weekend', from: '8am', to: '11pm', headway: '30', isWeekend: true },
+      { name: 'AM Peak', from: '7am', to: '10am', headway: 12 },
+      { name: 'Midday', from: '10am', to: '4pm', headway: 20 },
+      { name: 'PM Peak', from: '4pm', to: '8pm', headway: 12 },
+      { name: 'Evening', from: '8pm', to: '11pm', headway: 30 },
+      { name: 'Weekend', from: '8am', to: '11pm', headway: 30, isWeekend: true },
     ]);
 
     return {
