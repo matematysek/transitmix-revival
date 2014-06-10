@@ -5,13 +5,8 @@ app.Line = Backbone.Model.extend({
   urlRoot: '/api/lines',
 
   defaults: function() {
-    // For now, just randomly assign each line a color.
-    // Colors are: red, green, purple, blue
-    var colors = ['#AD0101', '#0D7215', '#4E0963', '#0071CA'];
-    var randomColor = _.sample(colors);
-
-    var names = app.DEFAULT_LINE_NAMES;
-    var randomName = _.random(10, 99) + ' ' + _.sample(names);
+    var color = app.utils.getNextColor();
+    var name = _.random(10, 99) + ' ' + _.sample(app.DEFAULT_LINE_NAMES);
 
     var serviceWindows = new app.ServiceWindows([
       { name: 'AM Peak', from: '7am', to: '10am', headway: '12' },
@@ -22,10 +17,10 @@ app.Line = Backbone.Model.extend({
     ]);
 
     return {
-      color: randomColor,
+      color: color,
       coordinates: [], // A GeoJSON MultiLineString
       mapId: undefined,
-      name: randomName,
+      name: name,
       serviceWindows: serviceWindows,
       speed: 10,
     };
