@@ -56,11 +56,13 @@
       {# if (remixedFromId) { #}
         <div class="source">Remixed from <span class="remixedFrom">#{{ remixedFromId }}</span></div>
       {# } #}
-      <div class="stats">This map: {{ lineCount }} lines, {{ distance }} miles, ${{ cost }} per year, {{ buses }} buses at peak</div>
+      <div class="stats">This map: {{ lineCount }} lines, {{ distance }} miles, {{ cost }} per year, {{ buses }} buses at peak</div>
     </header>
 
-    <div class="lines">
-      <!-- Lines are dynamically inserted here -->
+    <div class="scrollable">
+      <div class="lines">
+        <!-- Lines are dynamically inserted here -->
+      </div>
     </div>
 
     <div class="actions">
@@ -90,14 +92,14 @@
 
   <script type="text/template" id="tmpl-MapSidebarSubview">
     <div class="name">{{ name }}</div>
-    <div class="stats">{{ distance }} miles • {{ total.buses }} buses • ${{ totalCost }}</div>
+    <div class="stats">{{ distance }} miles • {{ total.buses }} buses • {{ totalCost }}</div>
   </script>
 
   <script type="text/template" id="tmpl-LineSidebarView">
     <nav>
-      <div class="back">&#8592; Map</div>
+      <div class="back">&#8592; All lines</div>
       <div class="right">
-        <div class="add">Add a Line</div>
+        <div class="add">Add a line</div>
         <div class="delete">Delete</div>
       </div>
     </nav>
@@ -128,14 +130,16 @@
 
     <div class="outputs advancedOutputs busOutputs" style="background: {{ color3 }}">
       <h2>Bus assumptions:</h2>
-      <input type="text" class="speed"> average speed<br/>
-      <input type="text" class="layover"> turn around time<br/>
+      <input type="text" class="speed"> avg. speed<br/>
+      <input type="text" class="layover"> recovery time<br/>
     </div>
 
     <div class="outputs advancedOutputs costOutputs" style="background: {{ color3 }}">
       <h2>Yearly operating cost:</h2>
-      <span class="revenueHours">4504 hours</span> bus time<br/>
+      <span class="revenueHours">4504</span> service hours<br/>
       x <input type="text" class="hourlyCost"> per hour<br/>
+      <p><a target="_blank" href="http://www.humantransit.org/02box.html">Read more</a> on transit costs.</p>
+
     </div>
   </script>
 

@@ -83,14 +83,14 @@ app.LineSidebarView = Backbone.View.extend({
     if (_.isNaN(cost)) {
       cost = 'Error';
     } else {
-      cost = '$' + app.utils.addCommas(cost.toFixed(0));
+      cost = app.utils.formatCost(cost);
     }
     this.$('.cost').html(cost);
 
     this.$('.buses').html(calcs.total.buses + ' buses');
 
     var revenueHours = app.utils.addCommas(calcs.total.revenueHours);
-    this.$('.revenueHours').html(revenueHours + ' hours');
+    this.$('.revenueHours').html(revenueHours);
   },
 
   save: function(model, options) {
