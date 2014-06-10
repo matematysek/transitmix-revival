@@ -90,7 +90,7 @@ app.LineSidebarView = Backbone.View.extend({
     this.$('.buses').html(calcs.total.buses + ' buses');
 
     var revenueHours = app.utils.addCommas(calcs.total.revenueHours);
-    this.$('.revenueHours').html(revenueHours + ' hours');
+    this.$('.revenueHours').html(revenueHours);
   },
 
   save: function(model, options) {
