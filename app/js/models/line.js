@@ -209,9 +209,15 @@ app.Line = Backbone.Model.extend({
     var hourlyCost = map.get('hourlyCost');
 
     var calculate = function(sw) {
-      var minutesPerDay = app.utils.diffTime(sw.get('from'), sw.get('to'));
-      if (minutesPerDay < 0) minutesPerDay = NaN;
+      if (!sw.isValid()) {
+        return {
+          buses: 0,
+          cost: 0,
+          revenueHours: 0,
+        };
+      }
 
+      var minutesPerDay = app.utils.diffTime(sw.get('from'), sw.get('to'));
       var hoursPerDay =  minutesPerDay / 60;
       var roundTripTime = (distance / speed) * (1 + layover) * 60;
       var buses = Math.ceil(roundTripTime / sw.get('headway'));

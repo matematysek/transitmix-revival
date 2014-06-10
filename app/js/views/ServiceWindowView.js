@@ -16,11 +16,16 @@ app.ServiceWindowView = Backbone.View.extend({
     'keydown': 'modifyMinutes',
   },
 
+  initialize: function() {
+    this.listenTo(this.model, 'change', this.renderValid);
+  },
+
   parseMinutes: function(val) {
-    return parseInt(val, 10) || 0;
+    return parseInt(val, 10);
   },
 
   addMinutes: function(val) {
+    if (!val) return '';
     return val + ' min';
   },
 
@@ -37,7 +42,12 @@ app.ServiceWindowView = Backbone.View.extend({
 
   render: function() {
     this.$el.html(this.template);
+    this.renderValid();
     this.stickit();
     return this;
+  },
+
+  renderValid: function() {
+    this.$el.toggleClass('isInvalid', !this.model.isValid());
   },
 });
