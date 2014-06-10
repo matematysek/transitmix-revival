@@ -195,6 +195,20 @@ app.utils.addCommas = function(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
+// Round cost to two significant figures and format it.
+// Only works for thousands and millions.
+app.utils.formatCost = function(cost) {
+  if (cost >= 10000000) {
+    return '$' + (cost / 1000000).toFixed(0) + ' million';
+  } else if (cost >= 1000000) {
+    return '$' + (cost / 1000000).toFixed(1) + ' million';
+  } else if (cost > 1000) {
+    return '$' + (cost / 1000).toFixed(0) + 'k';
+  } else {
+    return '$' + cost;
+  }
+};
+
 // Simple utility to calculate the difference, in minutes, between two hours
 // formatted as either military time (23:00) or standard time (11pm). Does not
 // work hours that cross day-boundries (e.g. 11pm to 1am).

@@ -48,7 +48,7 @@ app.MapSidebarView = Backbone.View.extend({
     var attrs = _.clone(this.model.attributes);
     _.extend(attrs, { 
       lineCount: lines.length,
-      cost: app.utils.addCommas(totalCost),
+      cost: app.utils.formatCost(totalCost),
       distance: totalDistance.toFixed(2),
       buses: totalBuses,
     });
@@ -116,7 +116,7 @@ app.MapSidebarSubview = Backbone.View.extend({
     var calcs = this.model.getCalculations();
     
     calcs.distance = calcs.distance.toFixed(2);
-    calcs.totalCost = app.utils.addCommas(calcs.total.cost);
+    calcs.totalCost = app.utils.formatCost(calcs.total.cost);
     _.extend(attrs, calcs);
 
     this.$el.html(this.template(attrs));

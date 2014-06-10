@@ -56,7 +56,7 @@
       {# if (remixedFromId) { #}
         <div class="source">Remixed from <span class="remixedFrom">#{{ remixedFromId }}</span></div>
       {# } #}
-      <div class="stats">This map: {{ lineCount }} lines, {{ distance }} miles, ${{ cost }} per year, {{ buses }} buses at peak</div>
+      <div class="stats">This map: {{ lineCount }} lines, {{ distance }} miles, {{ cost }} per year, {{ buses }} buses at peak</div>
     </header>
 
     <div class="scrollable">
@@ -92,7 +92,7 @@
 
   <script type="text/template" id="tmpl-MapSidebarSubview">
     <div class="name">{{ name }}</div>
-    <div class="stats">{{ distance }} miles • {{ total.buses }} buses • ${{ totalCost }}</div>
+    <div class="stats">{{ distance }} miles • {{ total.buses }} buses • {{ totalCost }}</div>
   </script>
 
   <script type="text/template" id="tmpl-LineSidebarView">

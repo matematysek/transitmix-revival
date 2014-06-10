@@ -83,7 +83,7 @@ app.LineSidebarView = Backbone.View.extend({
     if (_.isNaN(cost)) {
       cost = 'Error';
     } else {
-      cost = '$' + app.utils.addCommas(cost.toFixed(0));
+      cost = app.utils.formatCost(cost);
     }
     this.$('.cost').html(cost);
 
