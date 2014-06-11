@@ -35,5 +35,23 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
 }
 
+.newMap {
+  left: 220px;
+  bottom: 0;
+  background: #000;
+  margin-top: 20px;
+  padding: 18px 24px;
+  position: absolute;
+  opacity: 0.6;
+  font-size: 14px;
+  border-left: 1px solid #4D4D4D;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 /* Colors used throughout interface */
 $primary-color: #261835;
