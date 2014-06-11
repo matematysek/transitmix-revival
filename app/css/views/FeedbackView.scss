@@ -7,7 +7,9 @@
   left: 30px;
   opacity: 0.6;
   font-size: 14px;
+  min-width: 190px;
   max-width: 450px;
+  z-index: 12;
 }
 
 .feedbackView.expanded {
@@ -33,7 +35,6 @@
   color: #ADADAD;
   margin-top: 10px;
 }
-
 
 .feedbackView a {
   color: white;

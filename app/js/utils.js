@@ -232,3 +232,25 @@ app.utils.removeUndefined = function(object) {
     return memo;
   }, {});
 };
+
+// Cycles through available line colors, starting at a random point
+app.utils.getNextColor = (function() {
+  var colors = ['#AD0101', '#0D7215', '#4E0963', '#0071CA'];
+  var colorIndex = _.random(0, colors.length);
+
+  return function() {
+    colorIndex++;
+    if (colorIndex >= colors.length) colorIndex = 0;
+    return colors[colorIndex];
+  };
+})();
+
+app.utils.getBaseUrl = function() {
+  // Internet explorer doesn't have window.location.origin :(
+  if (!window.location.origin) {
+      var port = window.location.port ? ':' + window.location.port : '';
+      return window.location.protocol + '//' + window.location.hostname + port;
+  } else {
+      return window.location.origin;
+  }
+};

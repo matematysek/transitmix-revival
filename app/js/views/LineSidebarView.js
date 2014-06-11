@@ -77,19 +77,12 @@ app.LineSidebarView = Backbone.View.extend({
 
   updateCalculations: function() {
     var calcs = this.model.getCalculations();
-    this.$('.distance').html(calcs.distance.toFixed(2) + ' miles');
-
-    var cost = calcs.total.cost;
-    if (_.isNaN(cost)) {
-      cost = 'Error';
-    } else {
-      cost = app.utils.formatCost(cost);
-    }
-    this.$('.cost').html(cost);
-
-    this.$('.buses').html(calcs.total.buses + ' buses');
-
+    var cost = app.utils.formatCost(calcs.total.cost);
     var revenueHours = app.utils.addCommas(calcs.total.revenueHours);
+
+    this.$('.distance').html(calcs.distance.toFixed(2) + ' miles');
+    this.$('.buses').html(calcs.total.buses + ' buses');
+    this.$('.cost').html(cost);
     this.$('.revenueHours').html(revenueHours);
   },
 

@@ -9,6 +9,10 @@ app.MapView = Backbone.View.extend({
     this.lines = [];
   },
 
+  events: {
+    'click .newMap': 'newMap',
+  },
+
   render: function() {
     var lines = this.model.get('lines');
     lines.forEach(this.renderLines, this);
@@ -32,6 +36,7 @@ app.MapView = Backbone.View.extend({
     if (this.sidebar) this.sidebar.remove();
     this.sidebar = new app.MapSidebarView({ model: this.model });
     this.$el.html(this.sidebar.render().el);
+    this.renderNewMap();
 
     if (this.selectedLine) this.selectedLine.remove();
   },
@@ -42,10 +47,19 @@ app.MapView = Backbone.View.extend({
     if (this.sidebar) this.sidebar.remove();
     this.sidebar = new app.LineSidebarView({ model: line });
     this.$el.html(this.sidebar.render().el);
+    this.renderNewMap();
 
     if (this.selectedLine) this.selectedLine.remove();
     this.selectedLine = new app.SelectedLineView({ model: line });
     this.selectedLine.render();
+  },
+
+  renderNewMap: function() {
+    this.$el.append('<div class="newMap">New Map</div>');
+  },
+
+  newMap: function() {
+    app.router.navigate('/', { trigger: true });
   },
 
   remove: function() {

@@ -105,6 +105,14 @@
     color: rgba(255, 255, 255, 0.5);
     padding: 14px 14px;
 
+    .isInvalid {
+      opacity: 0.5;
+    }
+
+    .isInvalid input {
+      opacity: 0.5;
+    }
+
     .windows>div {
       margin-top: 5px;
     }
