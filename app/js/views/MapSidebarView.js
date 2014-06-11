@@ -74,7 +74,7 @@ app.MapSidebarView = Backbone.View.extend({
   },
 
   showShare: function() {
-    var url = window.location.origin + '/map/' + this.model.id;
+    var url = app.utils.getBaseUrl() + '/map/' + this.model.id;
     var $inputField = this.$('.sharebox>input');
 
     $inputField.val(url);

@@ -244,3 +244,13 @@ app.utils.getNextColor = (function() {
     return colors[colorIndex];
   };
 })();
+
+app.utils.getBaseUrl = function() {
+  // Internet explorer doesn't have window.location.origin :(
+  if (!window.location.origin) {
+      var port = window.location.port ? ':' + window.location.port : '';
+      return window.location.protocol + '//' + window.location.hostname + port;
+  } else {
+      return window.location.origin;
+  }
+};
