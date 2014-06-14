@@ -15,7 +15,7 @@ module Transitmix
       get '/api/lines/:id' do
         Line.first!(id: params[:id])
       end
-
+      
       params do
         optional :page, type: Integer, default: 1
         optional :per, type: Integer, default: 10, max: 100

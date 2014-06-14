@@ -22,3 +22,5 @@ end
 require 'app/models/line'
 require 'app/models/map'
 require 'app/models/app_status'
+require 'app/models/serializers/kml'
+require 'app/models/serializers/shapefile'

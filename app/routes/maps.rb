@@ -3,6 +3,8 @@ module Transitmix
     class Maps < Grape::API
       version 'v1', using: :header, vendor: 'transitmix'
       format :json
+      content_type :zip, 'application/octet-stream'
+      content_type :kml, 'application/vnd.google-earth.kml+xml'
 
       rescue_from Sequel::NoMatchingRow do
         Rack::Response.new({}, 404)
@@ -18,6 +20,16 @@ module Transitmix
 
       params do
         requires :id, type: Integer
+      end
+
+      get '/api/maps/:id.zip' do
+        map = Map.first!(id: params[:id])
+        Shapefile.new(map).call
+      end
+
+      get '/api/maps/:id.kml' do
+        map = Map.first!(id: params[:id])
+        KMLExport.new(map).call
       end
 
       get '/api/maps/:id' do

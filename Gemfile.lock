@@ -16,6 +16,8 @@ GEM
       descendants_tracker (~> 0.0.1)
     columnize (0.8.9)
     database_cleaner (1.2.0)
+    dbf (2.0.7)
+      fastercsv (~> 1.5.4)
     debugger (1.6.6)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
@@ -33,7 +35,9 @@ GEM
     execjs (2.0.2)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
+    fastercsv (1.5.5)
     ffaker (1.24.0)
+    georuby (2.2.1)
     grape (0.7.0)
       activesupport
       builder
@@ -56,10 +60,13 @@ GEM
     jsmin (1.0.1)
     json (1.8.1)
     kgio (2.9.2)
+    mini_portile (0.6.0)
     minitest (5.3.4)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     newrelic_rpm (3.8.1.221)
+    nokogiri (1.6.2.1)
+      mini_portile (= 0.6.0)
     pg (0.17.1)
     phantomjs (1.9.7.0)
     rack (1.5.2)
@@ -81,6 +88,10 @@ GEM
     rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.6)
+    ruby_kml (0.1.7)
+      builder
+      nokogiri
+    rubyzip (1.1.4)
     sass (3.3.7)
     sequel (4.10.0)
     sinatra (1.4.5)
@@ -114,11 +125,13 @@ PLATFORMS
 
 DEPENDENCIES
   database_cleaner
+  dbf
   debugger
   dedent
   dotenv
   factory_girl
   ffaker
+  georuby
   grape (~> 0.7)
   jasmine
   newrelic_rpm
@@ -126,6 +139,8 @@ DEPENDENCIES
   rack-test
   rake
   rspec (~> 2.14)
+  ruby_kml
+  rubyzip
   sass (~> 3.3)
   sequel (~> 4.10)
   sinatra (~> 1.4)

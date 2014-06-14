@@ -4,6 +4,16 @@
   right: 30px;
   width: 280px;
 
+  a {
+    text-decoration: none;
+    border-bottom: 1px dotted #F9F4FF;
+    color: white;
+  }
+
+  a:hover {
+    cursor: pointer;
+  }
+
   span {
     border-bottom: 1px dotted #7D6992;
     color: white;
@@ -84,9 +94,10 @@
     background: #518A51;
     padding: 16px 14px;
     position: relative;
+    font-size: 14px;
 
     input {
-      margin-top: 13px;
+      margin-bottom: 13px;
       color: #000;
       font-size: 13px;
       padding: 9px;
