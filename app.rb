@@ -19,6 +19,10 @@ require 'app/routes'
 module Transitmix
   class App < Sinatra::Application
     set :root, File.expand_path('../', __FILE__)
+
+    configure :production do
+      require 'newrelic_npm'
+    end
   end
 end
 
