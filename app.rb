@@ -21,7 +21,7 @@ module Transitmix
     set :root, File.expand_path('../', __FILE__)
 
     configure :production do
-      require 'newrelic_npm'
+      require 'newrelic_rpm'
     end
   end
 end
