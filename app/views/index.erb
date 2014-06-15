@@ -90,9 +90,11 @@
     </header>
   </script>
 
-  <script type="text/template" id="tmpl-MapSidebarSubview">
-    <div class="name">{{ name }}</div>
-    <div class="stats">{{ distance }} miles • {{ total.buses }} buses • {{ totalCost }}</div>
+  <script type="text/template" id="tmpl-MapSidebarItemView">
+    <div class="mapSidebarItemView" style="background:{{ color }}">
+      <div class="name">{{ name }}</div>
+      <div class="stats">{{ distance }} miles • {{ total.buses }} buses • {{ totalCost }}</div>
+    </div>
   </script>
 
   <script type="text/template" id="tmpl-LineSidebarView">
@@ -155,7 +157,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.stickit/0.7.0/backbone.stickit.min.js"></script>
-  <script src="//api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.uncompressed.js"></script>
+  <script src="//api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js"></script>
 
   <!-- the finest quality javascripts -->
   <%= js :app %>

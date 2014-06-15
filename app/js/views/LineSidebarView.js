@@ -1,6 +1,7 @@
-app.LineSidebarView = Backbone.View.extend({
+app.LineSidebarView = app.BaseView.extend({
   className: 'lineSidebarView',
-  template: _.template($('#tmpl-LineSidebarView').html()),
+
+  templateId: '#tmpl-LineSidebarView',
 
   bindings: {
     '.name': 'name',
@@ -12,9 +13,9 @@ app.LineSidebarView = Backbone.View.extend({
   },
 
   events: {
-    'click .back': 'unselect',
+    'click .back': 'clearSelection',
     'click .add': 'addLine',
-    'click .delete': 'delete',
+    'click .delete': 'deleteLine',
     'click .showBusOutputs': 'showBusOutputs',
     'click .showCostOutputs': 'showCostOutputs',
     'mouseleave': 'hideOutputs',
@@ -28,24 +29,32 @@ app.LineSidebarView = Backbone.View.extend({
     this.listenTo(map, 'change', this.updateCalculations);
     this.listenTo(this.model, 'change', this.updateCalculations);
     this.listenTo(serviceWindows, 'change', this.updateCalculations);
-
-    // Save references to the ServiceWindowViews for later cleanup
-    this.subviews = [];
   },
 
-  render: function() {
-    // Compute several shades of color for the UI
-    var color = this.model.get('color');
-    var attrs = _.extend(this.model.attributes, {
-      color2: app.utils.tweakColor(color, -22),
-      color3: app.utils.tweakColor(color, -44),
+  serialize: function() {
+    var attrs = _.clone(this.model.attributes);
+    
+    return _.extend(attrs, {
+      color2: app.utils.tweakColor(attrs.color, -22),
+      color3: app.utils.tweakColor(attrs.color, -44),
+    });
+  },
+
+  views: function() {
+    var serviceWindowViews = new app.CollectionView({
+      collection: this.model.get('serviceWindows'),
+      view: app.ServiceWindowView,
     });
 
-    this.$el.html(this.template(attrs));
+    return {
+      '.windows': serviceWindowViews
+    };
+  },
+
+  afterRender: function() {
     this.updateCalculations();
     this.stickit();
 
-    // Bind to map-level attributes
     var map = this.model.collection.map;
     this.stickit(map, {
       '.layover': {
@@ -59,20 +68,6 @@ app.LineSidebarView = Backbone.View.extend({
         onSet: function(val) { return parseInt(val.replace(/\D/g, ''), 10); },
       }
     });
-
-    // Render ServiceWindowsViews and insert into DOM
-    var frag = document.createDocumentFragment();
-    this.model.get('serviceWindows').each(function(serviceWindow) {
-      var serviceWindowView = new app.ServiceWindowView({
-        model: serviceWindow
-      });
-
-      this.subviews.push(serviceWindowView);
-      frag.appendChild(serviceWindowView.render().el);
-    }, this);
-    this.$('.windows').html(frag);
-
-    return this;
   },
 
   updateCalculations: function() {
@@ -92,8 +87,8 @@ app.LineSidebarView = Backbone.View.extend({
     }
   },
 
-  unselect: function() {
-    app.router.navigate('map/' + this.model.get('mapId'), { trigger: true });
+  clearSelection: function() {
+    app.events.trigger('map:clearSelection');
   },
 
   preventNewline: function(event) {
@@ -105,19 +100,11 @@ app.LineSidebarView = Backbone.View.extend({
   },
 
   addLine: function() {
-    var viewLine = function(model) {
-      var fragment = 'map/' + model.get('mapId') + '/line/' + model.id;
-      app.router.navigate(fragment, { trigger: true });
-    };
-
-    var mapId = this.model.get('mapId');
-    this.model.collection.create({ mapId: mapId }, { success: viewLine });
+    app.events.trigger('map:addLine');
   },
 
-  delete: function() {
-    var fragment = 'map/' + this.model.get('mapId');
-    this.model.destroy();
-    app.router.navigate(fragment, { trigger: true });
+  deleteLine: function() {
+    app.events.trigger('map:deleteLine', this.model.id);
   },
 
   showBusOutputs: function() {
@@ -133,10 +120,5 @@ app.LineSidebarView = Backbone.View.extend({
   hideOutputs: function() {
     $('.busOutputs').hide();
     $('.costOutputs').hide();
-  },
-
-  remove: function() {
-    this.subviews.map(function(subview) { subview.remove(); });
-    Backbone.View.prototype.remove.apply(this, arguments);
   },
 });

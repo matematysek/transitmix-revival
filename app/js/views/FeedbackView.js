@@ -1,16 +1,11 @@
-app.FeedbackView = Backbone.View.extend({
+app.FeedbackView = app.BaseView.extend({
   className: 'feedbackView',
 
-  template: _.template($('#tmpl-feedback-view').html()),
+  templateId: '#tmpl-feedback-view',
 
   events: {
     'click': 'expandFeedback',
     'mouseleave': 'hideFeedback',
-  },
-
-  render: function() {
-    this.$el.html(this.template({}));
-    return this;
   },
 
   expandFeedback: function() {

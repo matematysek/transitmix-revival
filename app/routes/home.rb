@@ -13,6 +13,8 @@ module Transitmix
         js :app, [
           '/js/app.js',
           '/js/utils.js',
+          '/js/framework/*.js',
+          '/js/controllers/*.js',
           '/js/data/*.js',
           '/js/models/*.js',
           '/js/collections/*.js',

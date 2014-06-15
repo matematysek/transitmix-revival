@@ -1,5 +1,5 @@
-app.ServiceWindowView = Backbone.View.extend({
-  template: $('#tmpl-ServiceWindowView').html(),
+app.ServiceWindowView = app.BaseView.extend({
+  templateId: '#tmpl-ServiceWindowView',
 
   bindings: {
     '.windowName': 'name',
@@ -40,11 +40,9 @@ app.ServiceWindowView = Backbone.View.extend({
     }
   },
 
-  render: function() {
-    this.$el.html(this.template);
+  afterRender: function() {
     this.renderValid();
     this.stickit();
-    return this;
   },
 
   renderValid: function() {

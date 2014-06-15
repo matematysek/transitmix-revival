@@ -52,25 +52,4 @@ app.Map = Backbone.Model.extend({
       zoom_level: attrs.zoomLevel,
     };
   },
-
-  // A specific model in the collection can be selected. This lets
-  // views quickly switch between the map the details of a single line.
-  select: function(lineId) {
-    if (this.selected && lineId === this.selected.id) return;
-
-    var lines =  this.get('lines');
-    this.selected = lines.get(lineId);
-    this.trigger('select');
-  },
-
-  unselect: function() {
-    if (!this.selected) return;
-
-    this.selected = false;
-    this.trigger('unselect');
-  },
-
-  getSelected: function() {
-    return this.selected;
-  },
 });
