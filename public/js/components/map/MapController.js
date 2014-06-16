@@ -21,7 +21,7 @@ app.MapController = app.Controller.extend({
 
     this.linesView = new app.CollectionView({
       collection: this.map.get('lines'),
-      view: app.LineView,
+      view: app.LeafletLineView,
     });
     this.linesView.render();
 
@@ -46,11 +46,11 @@ app.MapController = app.Controller.extend({
     this._teardownSelectionViews();
 
     var selectedLine = this.map.get('lines').get(lineId);
-    this.selectedLineView = new app.SelectedLineView({ model: selectedLine });
-    this.selectedLineView.render();
+    this.editableLine = new app.LeafletEditableLineView({ model: selectedLine });
+    this.editableLine.render();
 
-    this.lineSidebarView = new app.LineSidebarView({ model: selectedLine });
-    $('body').append(this.lineSidebarView.render().el);
+    this.lineDetailsView = new app.LineDetailsView({ model: selectedLine });
+    $('body').append(this.lineDetailsView.render().el);
 
     this.router.navigate('/map/' + this.map.id + '/line/' + lineId);
   },
@@ -58,16 +58,16 @@ app.MapController = app.Controller.extend({
   clearSelection: function() {
     this._teardownSelectionViews();
 
-    this.mapSidebarView = new app.MapSidebarView({ model: this.map });
-    $('body').append(this.mapSidebarView.render().el);
+    this.mapDetailsView = new app.MapDetailsView({ model: this.map });
+    $('body').append(this.mapDetailsView.render().el);
 
     this.router.navigate('/map/' + this.map.id);
   },
 
   _teardownSelectionViews: function() {
-    if (this.selectedLineView) this.selectedLineView.remove();
-    if (this.lineSidebarView) this.lineSidebarView.remove();
-    if (this.mapSidebarView) this.mapSidebarView.remove();
+    if (this.editableLine) this.editableLine.remove();
+    if (this.lineDetailsView) this.lineDetailsView.remove();
+    if (this.mapDetailsView) this.mapDetailsView.remove();
   },
 
   addLine: function() {

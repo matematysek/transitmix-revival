@@ -1,9 +1,9 @@
 // View that shows all the routes drawn, and lets you jump into any of them.
-app.MapSidebarView = app.BaseView.extend({
-  className: 'mapSidebarView',
+app.MapDetailsView = app.BaseView.extend({
+  className: 'mapDetailsView',
 
-  normalTemplate: _.template($('#tmpl-MapSidebarView').html()),
-  emptyTemplate: _.template($('#tmpl-MapSidebarView-empty').html()),
+  normalTemplate: _.template($('#tmpl-MapDetailsView').html()),
+  emptyTemplate: _.template($('#tmpl-MapDetailsView-empty').html()),
 
   events: {
     'click .add': 'addLine',
@@ -41,7 +41,7 @@ app.MapSidebarView = app.BaseView.extend({
   views: function() {
     var lineCollectionView = new app.CollectionView({
       collection: this.model.get('lines'),
-      view: app.MapSidebarItemView,
+      view: app.MapDetailsItemView,
     });
 
     return {
