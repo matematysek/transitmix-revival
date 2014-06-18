@@ -16,6 +16,7 @@ app.LineDetailsView = app.BaseView.extend({
     'click .back': 'clearSelection',
     'click .add': 'addLine',
     'click .delete': 'deleteLine',
+    'click .showMileageOutputs': 'showMileageOutputs',
     'click .showBusOutputs': 'showBusOutputs',
     'click .showCostOutputs': 'showCostOutputs',
     'mouseleave': 'hideOutputs',
@@ -76,6 +77,7 @@ app.LineDetailsView = app.BaseView.extend({
     var revenueHours = app.utils.addCommas(calcs.total.revenueHours);
 
     this.$('.distance').html(calcs.distance.toFixed(2) + ' miles');
+    this.$('.halfDistance').html((calcs.distance/2).toFixed(2) + ' miles');    
     this.$('.buses').html(calcs.total.buses + ' buses');
     this.$('.cost').html(cost);
     this.$('.revenueHours').html(revenueHours);
@@ -107,14 +109,23 @@ app.LineDetailsView = app.BaseView.extend({
     app.events.trigger('map:deleteLine', this.model.id);
   },
 
+  // TODO: DRY this up.
   showBusOutputs: function() {
     $('.busOutputs').toggle();
     $('.costOutputs').hide();
+    $('.mileageOutputs').hide();
   },
 
   showCostOutputs: function() {
     $('.costOutputs').toggle();
     $('.busOutputs').hide();
+    $('.mileageOutputs').hide();
+  },
+
+  showMileageOutputs: function() {
+    $('.mileageOutputs').toggle();
+    $('.busOutputs').hide();
+    $('.costOutputs').hide();
   },
 
   hideOutputs: function() {

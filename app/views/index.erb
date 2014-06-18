@@ -125,9 +125,15 @@
 
     <div class="outputs" style="background: {{ color3 }}">
       <h2>This line:</h2>
-      <span class="distance">0 miles</span> roundtrip<br/>
-      <span class="buses">0 buses</span> at peak <span class="showBusOutputs"></span><?xml version="1.0" encoding="utf-8"?><br/>
+      <span class="distance">0 miles</span> <span class="showMileageOutputs"></span><br/>
+      <span class="buses">0 buses</span> at peak <span class="showBusOutputs"></span><br/>
       <span class="cost">$0</span> / year <span class="showCostOutputs"></span>
+    </div>
+
+    <div class="outputs advancedOutputs mileageOutputs" style="background: {{ color3 }}">
+      <h2>Mileage:</h2>
+      <span class="halfDistance">1.80 miles</span> each way<br/>
+      <p>Support for differing inbound and outbound lines coming soon.</p>
     </div>
 
     <div class="outputs advancedOutputs busOutputs" style="background: {{ color3 }}">

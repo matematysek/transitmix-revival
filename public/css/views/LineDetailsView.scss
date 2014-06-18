@@ -164,29 +164,19 @@
   }
 
   // Inlined info image
-  .showBusOutputs, .showCostOutputs {
+  .showBusOutputs, .showCostOutputs, .showMileageOutputs {
     position: relative;
     top: 5px;
     opacity: 0.5;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
 
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij4KPGc+CjwvZz4KCTxwYXRoIGQ9Ik03LjkwMiAwLjY0MWMtNC4wNjQgMC4wNTQtNy4zMTUgMy4zOTQtNy4yNjEgNy40NTggMC4wNTQgNC4wNjIgMy4zOTQgNy4zMTQgNy40NTggNy4yNiA0LjA2NC0wLjA1NCA3LjMxNS0zLjM5NCA3LjI2MS03LjQ1OC0wLjA1NC00LjA2My0zLjM5NC03LjMxNC03LjQ1OC03LjI2ek04LjcxOCAzLjA5NGMwLjc0OCAwIDAuOTY5IDAuNDM0IDAuOTY5IDAuOTMgMCAwLjYyLTAuNDk3IDEuMTk0LTEuMzQ0IDEuMTk0LTAuNzA5IDAtMS4wNDYtMC4zNTctMS4wMjYtMC45NDYgMC0wLjQ5NyAwLjQxNi0xLjE3OCAxLjQwMS0xLjE3OHpNNi43OTkgMTIuNmMtMC41MTEgMC0wLjg4Ni0wLjMxLTAuNTI4LTEuNjc1bDAuNTg2LTIuNDE5YzAuMTAyLTAuMzg4IDAuMTE4LTAuNTQzIDAtMC41NDMtMC4xNTMgMC0wLjgxNyAwLjI2OC0xLjIxIDAuNTMybC0wLjI1NS0wLjQxOGMxLjI0NC0xLjAzOCAyLjY3NC0xLjY0OCAzLjI4Ny0xLjY0OCAwLjUxMSAwIDAuNTk2IDAuNjA1IDAuMzQxIDEuNTM1bC0wLjY3MiAyLjU0NGMtMC4xMTggMC40NS0wLjA2NyAwLjYwNSAwLjA1MSAwLjYwNSAwLjE1MyAwIDAuNjU2LTAuMTg2IDEuMTUtMC41NzRsMC4yODkgMC4zODhjLTEuMjA5IDEuMjA5LTIuNTI4IDEuNjc0LTMuMDQwIDEuNjc0eiIgZmlsbD0iI2ZmZmZmZiI+PC9wYXRoPgo8L3N2Zz4K) no-repeat;
   }
 
-  .showBusOutputs:hover, .showCostOutputs:hover {
+  .showBusOutputs:hover, .showCostOutputs:hover, .showMileageOutputs:hover {
     opacity: 1;
-  }
-
-  .showBusOutputs {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-  }
-
-  .showCostOutputs {
-    // background: url(/images/info.svg);
-    width: 20px;
-    height: 20px;
-    display: inline-block;
   }
 
   .advancedOutputs {
@@ -217,6 +207,10 @@
     .hourlyCost {
       width: 60px;
     }
+  }
+
+  .mileageOutputs {
+    display: none;
   }
 
   .busOutputs {
