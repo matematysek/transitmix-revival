@@ -202,7 +202,9 @@ app.Line = Backbone.Model.extend({
     var attrs = this.attributes;
     var speed = attrs.speed;
     var latlngs = _.flatten(attrs.coordinates, true);
-    var distance = app.utils.calculateDistance(latlngs);
+
+    // Double the distance because we're assuming roundtrip
+    var distance = app.utils.calculateDistance(latlngs) * 2;
 
     var map = this.collection.map;
     var layover = map.get('layover');
