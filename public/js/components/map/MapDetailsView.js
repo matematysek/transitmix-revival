@@ -72,7 +72,7 @@ app.MapDetailsView = app.BaseView.extend({
   },
 
   remix: function() {
-    app.events.trigger('map:remix');
+    app.events.trigger('app:remixMap', this.model.id);
   },
 
   remixedFrom: function() {

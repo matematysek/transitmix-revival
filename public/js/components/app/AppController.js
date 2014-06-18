@@ -2,9 +2,10 @@
 app.AppController = app.Controller.extend({
   initialize: function() {
     this.listenTo(app.events, 'app:showMap',           this.showMap);
-    this.listenTo(app.events, 'app:showPreloadedMap',  this.showPreloadedMap);
     this.listenTo(app.events, 'app:showHome',          this.showHome);
     this.listenTo(app.events, 'app:showNotification',  this.showNotification);
+    this.listenTo(app.events, 'app:createMap',         this.createMap);
+    this.listenTo(app.events, 'app:remixMap',          this.remixMap);
 
     this.setupViews();
   },
@@ -18,7 +19,7 @@ app.AppController = app.Controller.extend({
   },
 
   showMap: function(mapId, lineId) {
-    // If we're already viewing this map, avoid loading it a second time
+    // If we're already viewing this map (i.e., back button), avoid loading it a second time
     var isLoaded = this.mapController && this.mapController.map.id === mapId;
     if (isLoaded) {
       this.mapController.selectLine(lineId);
@@ -34,17 +35,34 @@ app.AppController = app.Controller.extend({
     this.router.navigate('/map/' + mapId);
   },
 
-  // Some parts of the app like remix have a copy of the new map object.
-  // We can pass it in directly to avoid loading a second time. 
-  showPreloadedMap: function(map) {
-    this._closeControllers();
-    this.mapController = new app.MapController({ map: map, router: this.router });
-  },
-
   showHome: function() {
     this._closeControllers();
     this.homeController = new app.HomeController({ router: this });
     this.router.navigate('/');
+  },
+
+  remixMap: function(mapId) {
+    var url = '/api/maps/' + mapId + '/remix';
+    $.post(url, function(resp) {
+      var message = 'Now editing a freshly-made duplicate of the original map.';
+      app.events.trigger('app:showNotification', message);
+
+      var map = new app.Map(resp, { parse: true });
+      this._closeControllers();
+      this.mapController = new app.MapController({ map: map, router: this.router });
+    });
+  },
+
+  createMap: function(city) {
+    var afterCreate = function(map) {
+      this._closeControllers();
+      this.mapController = new app.MapController({ map: map, router: this.router });
+    };
+
+    app.utils.geocode(city, function(latlng, name) {
+      var map = new app.Map({ name: name, center: latlng });
+      map.save({}, { success:  _.bind(afterCreate, this)});
+    }, this);
   },
 
   // When switching between controllers, close the other ones
