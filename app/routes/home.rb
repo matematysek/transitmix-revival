@@ -18,10 +18,11 @@ module Transitmix
           '/js/utils.js',
           '/js/framework/*.js',
           '/js/router.js',
+          '/js/models/*.js',
+          '/js/collections/*.js',
           '/js/components/app/*.js',
           '/js/components/map/*.js',
           '/js/components/home/*.js',
-          '/js/datastores/*.js',
         ]
 
         css :app, [
