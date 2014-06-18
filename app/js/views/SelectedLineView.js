@@ -2,7 +2,7 @@ app.SelectedLineView = Backbone.View.extend({
   initialize: function() {
     this.listenTo(this.model, 'change:coordinates', this.updateCoordinates);
 
-    _.bindAll(this, 'unselect', 'updateWaypoint', 'removeWaypoint',
+    _.bindAll(this, 'clearSelection', 'updateWaypoint', 'removeWaypoint',
       'redrawMarkers', 'delayedRedrawMarkers', 'draw', 'showDrawingLine',
       'stopDrawing', 'showInsert', 'beginInsert', 'updateInsert','finishInsert',
       'removeInsert');
@@ -15,8 +15,8 @@ app.SelectedLineView = Backbone.View.extend({
     this.isDrawing = false;
     this.isInserting = false;
 
-    // Click anywhere on the map to unselect
-    app.leaflet.on('click', this.unselect);
+    // Click anywhere on the map to clearSelection
+    app.leaflet.on('click', this.clearSelection);
   },
 
   render: function() {
@@ -38,9 +38,9 @@ app.SelectedLineView = Backbone.View.extend({
     this.line.setLatLngs(this.model.get('coordinates'));
   },
 
-  unselect: function() {
+  clearSelection: function() {
     if (this.isDrawing) return;
-    app.router.navigate('map/' + this.model.get('mapId'), { trigger: true });
+    app.events.trigger('map:clearSelection');
   },
 
   // Markers & Marker Events
@@ -269,7 +269,7 @@ app.SelectedLineView = Backbone.View.extend({
     this.removeDrawing();
     this.markers.forEach(function(m) { app.leaflet.removeLayer(m); });
     app.leaflet.removeLayer(this.line);
-    app.leaflet.off('click', this.unselect);
+    app.leaflet.off('click', this.clearSelection);
     Backbone.View.prototype.remove.apply(this, arguments);
   },
 

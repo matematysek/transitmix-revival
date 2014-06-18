@@ -1,9 +1,8 @@
 // View that shows all the routes drawn, and lets you jump into any of them.
-app.MapSidebarView = Backbone.View.extend({
+app.MapSidebarView = app.BaseView.extend({
   className: 'mapSidebarView',
 
-  template: _.template($('#tmpl-MapSidebarView').html()),
-
+  normalTemplate: _.template($('#tmpl-MapSidebarView').html()),
   emptyTemplate: _.template($('#tmpl-MapSidebarView-empty').html()),
 
   events: {
@@ -14,20 +13,11 @@ app.MapSidebarView = Backbone.View.extend({
     'mouseleave': 'hideShare',
   },
 
-  initialize: function() {
-    this.subviews = [];
-  },
-
-  render: function() {
-    // Create fragments for each individual line and
-    // calculate total costs for the summary
+  serialize: function() {
+    var attrs = _.clone(this.model.attributes);
+    
+    // TODO: Give the map model a function to compute it's summary statistics
     var lines = this.model.get('lines');
-    if (lines.length === 0) {
-      this.$el.html(this.emptyTemplate(this.model.attributes));
-      return this;
-    }
-
-    var frag = document.createDocumentFragment();
     var totalDistance = 0;
     var totalCost = 0;
     var totalBuses = 0;
@@ -35,42 +25,37 @@ app.MapSidebarView = Backbone.View.extend({
     lines.forEach(function(line) {
       var calcs = line.getCalculations();
 
-      // TODO: Give the map model a function to compute it's summary statistics
       totalDistance += calcs.distance;
       totalCost += calcs.total.cost;
       totalBuses += calcs.total.buses;
-
-      var subview = new app.MapSidebarSubview({ model: line });
-      this.subviews.push(subview);
-      frag.appendChild(subview.render().el);
     }, this);
 
-    var attrs = _.clone(this.model.attributes);
-    _.extend(attrs, { 
+    return _.extend(attrs, { 
       lineCount: lines.length,
       cost: app.utils.formatCost(totalCost),
       distance: totalDistance.toFixed(2),
       buses: totalBuses,
     });
-    this.$el.html(this.template(attrs));
-    this.$('.lines').append(frag);
+  },
 
-    return this;
+  views: function() {
+    var lineCollectionView = new app.CollectionView({
+      collection: this.model.get('lines'),
+      view: app.MapSidebarItemView,
+    });
+
+    return {
+      '.lines': lineCollectionView,
+    };
+  },
+
+  beforeRender: function() {
+    var lines = this.model.get('lines');
+    this.template = lines.length ? this.normalTemplate : this.emptyTemplate;
   },
 
   addLine: function() {
-    var line = new app.Line({
-      mapId: this.model.get('id')
-    });
-
-    var viewLine = function(line) {
-      this.model.get('lines').add(line);
-
-      var fragment = 'map/' + this.model.id + '/line/' + line.id;
-      app.router.navigate(fragment, { trigger: true });
-    };
-
-    line.save({}, { success: _.bind(viewLine, this) });
+    app.events.trigger('map:addLine');
   },
 
   showShare: function() {
@@ -87,46 +72,10 @@ app.MapSidebarView = Backbone.View.extend({
   },
 
   remix: function() {
-    app.router.remix();
+    app.events.trigger('map:remix');
   },
 
   remixedFrom: function() {
-    var frag = 'map/' + this.model.get('remixedFromId');
-    app.router.navigate(frag, { trigger: true });
+    app.events.trigger('app:showMap', this.model.get('remixedFromId'));
   },
-
-  remove: function() {
-    this.subviews.map(function(subview) { subview.remove(); });
-    Backbone.View.prototype.remove.apply(this, arguments);
-  },
-});
-
-
-app.MapSidebarSubview = Backbone.View.extend({
-  className: 'mapSidebarSubview',
-
-  template: _.template($('#tmpl-MapSidebarSubview').html()),
-
-  events: {
-    'click': 'select',
-  },
-
-  render: function() {
-    var attrs = _.clone(this.model.toJSON());
-    var calcs = this.model.getCalculations();
-    
-    calcs.distance = calcs.distance.toFixed(2);
-    calcs.totalCost = app.utils.formatCost(calcs.total.cost);
-    _.extend(attrs, calcs);
-
-    this.$el.html(this.template(attrs));
-    this.$el.css({ background: attrs.color });
-
-    return this;
-  },
-
-  select: function() {
-    var fragment = 'map/' + this.model.get('mapId') + '/line/' + this.model.id;
-    app.router.navigate(fragment, { trigger: true });
-  }
 });

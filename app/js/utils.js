@@ -55,6 +55,35 @@ app.utils.decodeGeometry = function(encoded, precision) {
   return array;
 };
 
+// Geocode a city into a latlng and a more formalized city name 
+// using the  Google Maps geocoding API.
+app.utils.geocode = function(city, callback, context) {
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' +
+  encodeURI(city) + '&sensor=false&key=AIzaSyCcgZLlBTM4GY0RhkUjy4MDD9RaZ0zIoiY';
+
+  $.getJSON(url, function(response) {
+    if (response.error || response.results.length === 0) {
+      console.log('Unable to geocode city. Womp Womp.', response.error);
+    }
+
+    // Get the coordinates for the center of the city
+    var location = response.results[0].geometry.location;
+    var latlng = [location.lat, location.lng];
+
+    // Get the city's name. In google maps this is called 'locality'
+    var name = city;
+    var components = response.results[0].address_components;
+    for (var i = 0; i < components.length; i++) {
+      if (_.contains(components[i].types, 'locality')) {
+        name = components[i].long_name;
+        break;
+      }
+    }
+
+    callback.call(context || this, latlng, name);
+  });
+};
+
 // Calculate the distance between two latlngs.
 // e.g. haversine([12.33, 78.99], [13.192, 79.11])
 // https://github.com/niix/haversine/blob/master/haversine.js
@@ -242,6 +271,16 @@ app.utils.getNextColor = (function() {
     colorIndex++;
     if (colorIndex >= colors.length) colorIndex = 0;
     return colors[colorIndex];
+  };
+})();
+
+app.utils.getRandomName = (function() {
+  var names = ['Haberdasher', 'Puddle Jumper', 'Calypso', 'Inverter',
+    'Heart of Gold', 'Yamato', 'Starfighter', 'Belafonte', 'Cousteau',
+    'X Wing', 'Y Wing', 'TIE Fighter', 'Google Bus'];
+
+  return function() {
+    return _.sample(names);
   };
 })();
 
