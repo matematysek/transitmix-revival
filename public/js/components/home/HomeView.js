@@ -12,7 +12,7 @@ app.HomeView = app.BaseView.extend({
     var city = this.$('.homeCity').html();
     if (!city) return;
 
-    app.events.trigger('home:createMap', city);
+    app.events.trigger('app:createMap', city);
   },
 
   captureEnter: function (event) {

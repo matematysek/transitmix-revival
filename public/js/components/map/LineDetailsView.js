@@ -1,7 +1,7 @@
-app.LineSidebarView = app.BaseView.extend({
-  className: 'lineSidebarView',
+app.LineDetailsView = app.BaseView.extend({
+  className: 'lineDetailsView',
 
-  templateId: '#tmpl-LineSidebarView',
+  templateId: '#tmpl-LineDetailsView',
 
   bindings: {
     '.name': 'name',

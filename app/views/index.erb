@@ -50,7 +50,7 @@
     </div>
   </script>
 
-  <script type="text/template" id="tmpl-MapSidebarView">
+  <script type="text/template" id="tmpl-MapDetailsView">
     <header>
       <h1>{{ name }}</h1>
       {# if (remixedFromId) { #}
@@ -82,7 +82,7 @@
         Download <a href="/api/maps/{{ id }}.kml">KML</a> or <a href="/api/maps/{{ id }}.zip">Shapefile</a>
   </script>
 
-  <script type="text/template" id="tmpl-MapSidebarView-empty">
+  <script type="text/template" id="tmpl-MapDetailsView-empty">
     <header>
       <h1>{{ name }}</h1>
       <p>Lovely city you've got there. But it sure could use some transit.<!-- ' Fix syntax coloring in Sublime--></p>
@@ -90,14 +90,14 @@
     </header>
   </script>
 
-  <script type="text/template" id="tmpl-MapSidebarItemView">
-    <div class="mapSidebarItemView" style="background:{{ color }}">
+  <script type="text/template" id="tmpl-MapDetailsItemView">
+    <div class="mapDetailsItemView" style="background:{{ color }}">
       <div class="name">{{ name }}</div>
       <div class="stats">{{ distance }} miles • {{ total.buses }} buses • {{ totalCost }}</div>
     </div>
   </script>
 
-  <script type="text/template" id="tmpl-LineSidebarView">
+  <script type="text/template" id="tmpl-LineDetailsView">
     <nav>
       <div class="back">&#8592; All lines</div>
       <div class="right">

@@ -1,4 +1,4 @@
-app.SelectedLineView = Backbone.View.extend({
+app.LeafletEditableLineView = Backbone.View.extend({
   initialize: function() {
     this.listenTo(this.model, 'change:coordinates', this.updateCoordinates);
 

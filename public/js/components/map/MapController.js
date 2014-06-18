@@ -4,7 +4,6 @@ app.MapController = app.Controller.extend({
     this.listenTo(app.events, 'map:clearSelection',  this.clearSelection);
     this.listenTo(app.events, 'map:addLine',         this.addLine);
     this.listenTo(app.events, 'map:deleteLine',      this.deleteLine);
-    this.listenTo(app.events, 'map:remix',           this.remix);
 
     if (options.map) {
       this.map = options.map;
@@ -21,7 +20,7 @@ app.MapController = app.Controller.extend({
 
     this.linesView = new app.CollectionView({
       collection: this.map.get('lines'),
-      view: app.LineView,
+      view: app.LeafletLineView,
     });
     this.linesView.render();
 
@@ -46,11 +45,11 @@ app.MapController = app.Controller.extend({
     this._teardownSelectionViews();
 
     var selectedLine = this.map.get('lines').get(lineId);
-    this.selectedLineView = new app.SelectedLineView({ model: selectedLine });
-    this.selectedLineView.render();
+    this.editableLine = new app.LeafletEditableLineView({ model: selectedLine });
+    this.editableLine.render();
 
-    this.lineSidebarView = new app.LineSidebarView({ model: selectedLine });
-    $('body').append(this.lineSidebarView.render().el);
+    this.lineDetailsView = new app.LineDetailsView({ model: selectedLine });
+    $('body').append(this.lineDetailsView.render().el);
 
     this.router.navigate('/map/' + this.map.id + '/line/' + lineId);
   },
@@ -58,41 +57,28 @@ app.MapController = app.Controller.extend({
   clearSelection: function() {
     this._teardownSelectionViews();
 
-    this.mapSidebarView = new app.MapSidebarView({ model: this.map });
-    $('body').append(this.mapSidebarView.render().el);
+    this.mapDetailsView = new app.MapDetailsView({ model: this.map });
+    $('body').append(this.mapDetailsView.render().el);
 
     this.router.navigate('/map/' + this.map.id);
   },
 
   _teardownSelectionViews: function() {
-    if (this.selectedLineView) this.selectedLineView.remove();
-    if (this.lineSidebarView) this.lineSidebarView.remove();
-    if (this.mapSidebarView) this.mapSidebarView.remove();
+    if (this.editableLine) this.editableLine.remove();
+    if (this.lineDetailsView) this.lineDetailsView.remove();
+    if (this.mapDetailsView) this.mapDetailsView.remove();
   },
 
   addLine: function() {
-    var afterSave = function(line) { this.selectLine(line.id); };
+    var afterSave = function(line) { app.events.trigger('map:selectLine', line.id); };
     var lines = this.map.get('lines');
-    lines.create({ mapId: this.map.id }, { success: _.bind(afterSave, this) });
+    lines.create({ mapId: this.map.id }, { success: afterSave });
   },
 
   deleteLine: function(lineId) {
     var line = this.map.get('lines').get(lineId);
     line.destroy();
     this.clearSelection();
-  },
-
-  remix: function() {
-    var url = '/api/maps/' + this.map.id + '/remix';
-    $.post(url, _.bind(this._finishRemix, this));
-  },
-
-  _finishRemix: function(resp) {
-    var message = 'Now editing a freshly-made duplicate of the original map.';
-    app.events.trigger('app:showNotification', message);
-
-    var map = new app.Map(resp, { parse: true });
-    app.events.trigger('app:showPreloadedMap', map);
   },
 
   teardownViews: function() {

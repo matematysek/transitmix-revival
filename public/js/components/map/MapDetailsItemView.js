@@ -1,5 +1,5 @@
-app.MapSidebarItemView = app.BaseView.extend({
-  templateId: '#tmpl-MapSidebarItemView',
+app.MapDetailsItemView = app.BaseView.extend({
+  templateId: '#tmpl-MapDetailsItemView',
 
   events: {
     'click': 'selectLine',

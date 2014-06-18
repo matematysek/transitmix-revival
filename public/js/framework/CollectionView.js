@@ -4,19 +4,13 @@ app.CollectionView = Backbone.View.extend({
   initialize: function(options) {
     this.itemView = options.view;
 
+    this.rendered = false;
     this.views = [];
     this.byId = {};
-    options.collection.each(this.addView, this);
+    options.collection.each(this.appendView, this);
 
-    this.listenTo(options.collection, 'add', this.addOne);
-    this.listenTo(options.collection, 'remove', this.removeOne);
-  },
-
-  addView: function(item) {
-    var view = new this.itemView({ model: item });
-    this.views.push(view);
-    this.byId[item.id] = view;
-    return view;
+    this.listenTo(options.collection, 'add', this.appendView);
+    this.listenTo(options.collection, 'remove', this.removeView);
   },
 
   render: function() {
@@ -27,15 +21,19 @@ app.CollectionView = Backbone.View.extend({
     });
 
     this.$el.html(frag);
+    this.rendered = true;
     return this;
   },
 
-  addOne: function(item) {
-    var view = this.addView(item);
-    this.$el.append(view.render().el);
+  appendView: function(item) {
+    var view = new this.itemView({ model: item });
+    this.views.push(view);
+    this.byId[item.id] = view;
+    if (this.rendered) this.$el.append(view.render().el);
+    return view;
   },
 
-  removeOne: function(item) {
+  removeView: function(item) {
     this.byId[item.id].remove();
     delete this.byId[item.id];
   },
