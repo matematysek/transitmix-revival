@@ -4,6 +4,8 @@ app.MapController = app.Controller.extend({
     this.listenTo(app.events, 'map:clearSelection',  this.clearSelection);
     this.listenTo(app.events, 'map:addLine',         this.addLine);
     this.listenTo(app.events, 'map:deleteLine',      this.deleteLine);
+    this.listenTo(app.events, 'map:toggleNearby',    this.toggleNearby);
+    this.listenTo(app.events, 'map:addNearbyLine',   this.addNearbyLine);
 
     if (options.map) {
       this.map = options.map;
@@ -25,13 +27,8 @@ app.MapController = app.Controller.extend({
     this.linesView.render();
 
     // Tiny view for the 'New Map' button in the bottom left
-    var HomeButtonView = app.BaseView.extend({
-      template: _.template('<div class="showHome">New Map</div>'),
-      events: { 'click': 'showHome' },
-      showHome: function() { app.events.trigger('app:showHome'); }
-    });
-    this.homeButtonView = new HomeButtonView();
-    $('body').append(this.homeButtonView.render().el);
+    this.mapExtrasView = new app.MapExtrasView({ model: this.map });
+    $('body').append(this.mapExtrasView.render().el);
 
     this.selectLine(lineId);
   },
@@ -81,9 +78,63 @@ app.MapController = app.Controller.extend({
     this.clearSelection();
   },
 
+  // Loads nearby agencies & lines, then creates an associated view for them.
+  _cachedNearby: undefined,
+
+  toggleNearby: function(center) {
+    if (this.showingNearby) {
+      this.hideNearby();
+    } else {
+      this.showNearby(center);
+    }
+    this.showingNearby = !this.showingNearby;
+  },
+
+  showNearby: function(latlng) {
+    if (this._cachedNearby) {
+      this._showNearby(this._cachedNearby);
+      return;
+    }
+
+    app.utils.getNearbyGTFS(latlng, function(nearby) {
+      this._cachedNearby = nearby;
+      this._showNearby(nearby);
+    }, this);
+  },
+
+  _showNearby: function(nearby) {
+    var maps = new app.Maps(nearby, { parse: true });
+    this.nearbyView = new app.NearbyView({ collection: maps });
+    $('body').append(this.nearbyView.render().el);
+  },
+
+  hideNearby: function() {
+    this.nearbyView.remove();
+  },
+
+  addNearbyLine: function(line) {
+    app.utils.getNearbyCoordinates(line.get('mapId'), line.id, function(coordinates) {
+      var lines = this.map.get('lines');
+      var attrs = _.clone(line.attributes);
+      delete attrs.id;
+
+      _.extend(attrs, {
+        mapId: this.map.id,
+        coordinates: coordinates,
+      });
+
+      var afterCreate = function(line) {
+        app.events.trigger('map:selectLine', line.id);
+      };
+      lines.create(attrs, { success: afterCreate });
+    }, this);
+  },
+
+
   teardownViews: function() {
     this._teardownSelectionViews();
     this.linesView.remove();
-    this.homeButtonView.remove();
+    if (this.nearbyView) this.nearbyView.remove();
+    this.mapExtrasView.remove();
   },
 });

@@ -1,0 +1,46 @@
+.nearbyView {
+  position: absolute;
+  bottom: 50px;
+  left: 30px;
+  width: 447px;
+  height: 400px;
+  background: #000;
+  opacity: 0.8;
+  color: #FFF;
+  overflow: auto;
+  padding: 18px;
+  border-bottom: 1px solid #707070;
+
+  h2 {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    padding-bottom: 5px;
+  }
+
+  .nearbyMap {
+    margin-bottom: 20px;
+  }
+
+  .nearbyLine {
+    color: #B8B8B8;
+    margin-right: 100px;
+    margin-bottom: 4px;
+    line-height: 28px;
+    
+    span {
+      border-bottom: 1px dotted #727272;
+    }
+
+    span:hover {
+      border-bottom: 1px dotted #ccc;
+      cursor: pointer;
+    }
+  }
+
+  .apology {
+    font-size: 18px;
+    line-height: 32px;
+    margin-bottom: -32px;
+  }
+}
