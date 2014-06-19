@@ -22,8 +22,7 @@ module Transitmix
 
     configure :production do
       require 'newrelic_rpm'
-      require 'config/error_logging'
-      use Airbrake::Sinatra
+      require 'sinatra-error-logging'
     end
   end
 end
