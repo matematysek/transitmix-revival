@@ -42,15 +42,17 @@ app.AppController = app.Controller.extend({
   },
 
   remixMap: function(mapId) {
-    var url = '/api/maps/' + mapId + '/remix';
-    $.post(url, function(resp) {
+    var afterRemix = function(resp) {
       var message = 'Now editing a freshly-made duplicate of the original map.';
       app.events.trigger('app:showNotification', message);
 
       var map = new app.Map(resp, { parse: true });
       this._closeControllers();
       this.mapController = new app.MapController({ map: map, router: this.router });
-    });
+    };
+
+    var url = '/api/maps/' + mapId + '/remix';
+    $.post(url, _.bind(afterRemix, this));
   },
 
   createMap: function(city) {
