@@ -35,7 +35,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
 }
 
-.showHome {
+.showHome, .showNearby {
   left: 220px;
   bottom: 0;
   background: #000;
@@ -49,6 +49,14 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 10;
 
   &:hover {
+    opacity: 0.8;
+  }
+}
+
+.showNearby {
+  left: 333px;
+  width: 144px;
+  &.showing {
     opacity: 0.8;
   }
 }

@@ -28,13 +28,13 @@ app.CollectionView = Backbone.View.extend({
   appendView: function(item) {
     var view = new this.itemView({ model: item });
     this.views.push(view);
-    this.byId[item.id] = view;
+    this.byId[item.cid] = view;
     if (this.rendered) this.$el.append(view.render().el);
     return view;
   },
 
   removeView: function(item) {
-    this.byId[item.id].remove();
+    this.byId[item.cid].remove();
     delete this.byId[item.id];
   },
 

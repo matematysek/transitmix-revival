@@ -84,6 +84,24 @@ app.utils.geocode = function(city, callback, context) {
   });
 };
 
+app.utils.getNearbyGTFS = function(latlng, callback, context) {  
+  var url = 'http://transitmix-gtfs.herokuapp.com/api/' +
+    'agenciesNearbyWithRoutes/' + latlng[0] + '/' + latlng[1];
+  
+  $.getJSON(url, function(resp) {
+    callback.call(context || this, resp);
+  });
+};
+
+app.utils.getNearbyCoordinates = function(agency, lineId, callback, context) {  
+  var url = 'http://transitmix-gtfs.herokuapp.com/api/coordinates/' +  agency + '/' + lineId;
+  
+  $.getJSON(url, function(resp) {
+    callback.call(context || this, resp);
+  });
+};
+
+
 // Calculate the distance between two latlngs.
 // e.g. haversine([12.33, 78.99], [13.192, 79.11])
 // https://github.com/niix/haversine/blob/master/haversine.js
