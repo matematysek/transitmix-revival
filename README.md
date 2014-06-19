@@ -85,6 +85,10 @@ gem install rerun
 rerun 'bundle exec rackup'
 ```
 
+### Error Logging
+
+Transitmix can be configured to log runtime errors to an external service such as [Airbrake](https://airbrake.io/) or [Errbit](https://github.com/errbit/errbit). Set the `ERROR_LOG_KEY` and `ERROR_LOG_HOST` environment variables to enable the extension.
+
 ### Developing Under Windows
 
 - Install [Virtual Box](https://www.virtualbox.org/)
