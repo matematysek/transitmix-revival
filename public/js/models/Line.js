@@ -224,7 +224,8 @@ app.Line = Backbone.Model.extend({
       var roundTripTime = (distance / speed) * (1 + layover) * 60;
       var buses = Math.ceil(roundTripTime / sw.get('headway'));
 
-      var daysPerYear = sw.isWeekend ? 110 : 255;
+
+      var daysPerYear = sw.get('isWeekend') ? 110 : 255;
       var revenueHours = buses * hoursPerDay * daysPerYear;
 
       var costPerYear = revenueHours * hourlyCost;
