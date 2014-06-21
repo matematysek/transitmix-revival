@@ -73,8 +73,8 @@ app.utils.geocode = function(city, callback, context) {
     var name = city;
     var components = response.results[0];
     for (var i = 0; i < components.length; i++) {
-      if (_.contains(components[i].types, 'city')) {
-        name = components[i].long_name;
+      if (components[i].type === 'city') {
+        name = components[i].name;
         break;
       }
     }
