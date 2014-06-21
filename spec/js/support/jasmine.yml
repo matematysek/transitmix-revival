@@ -11,7 +11,14 @@
 #   - dist/**/*.js
 #
 src_files:
-  - app/js/**/*.js
+  - public/deps/jquery.min.js
+  - public/deps/underscore-min.js
+  - public/deps/backbone-min.js
+  - public/js/app.js
+  - public/js/framework/*.js
+  - public/js/models/*.js
+  - public/js/collections/*.js
+  - public/js/**/*.js
 
 # stylesheets
 #
