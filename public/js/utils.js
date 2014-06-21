@@ -59,7 +59,7 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
   var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' +
-  encodeURI(city) + '&sensor=false&key=AIzaSyCcgZLlBTM4GY0RhkUjy4MDD9RaZ0zIoiY';
+  encodeURI(city) + '&sensor=false&key=AIzaSyBWv8IPqwn_v7iya4I17bP9KXAg1wqT0_Q';
 
   $.getJSON(url, function(response) {
     if (response.error || response.results.length === 0) {
