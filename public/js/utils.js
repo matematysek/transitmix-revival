@@ -58,29 +58,29 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // Geocode a city into a latlng and a more formalized city name 
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
-  var geocoder = L.mapbox.geocoder('codeforamerica.h6mlbj75');
-  geocoder.query(city, function(err, response) {
+ var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city);
 
-    if (err || response.results.length === 0) {
-      // TODO: add displayed error message
-      console.log('Unable to geocode city. Womp Womp.', err);
-    }
+ $.getJSON(url, function(response) {
+   if (response.error || response.results.length === 0) {
+     console.log('Unable to geocode city. Womp Womp.', response.error);
+   }
 
-    // Get the coordinates for the center of the city
-    var latlng = response.latlng;
+   // Get the coordinates for the center of the city
+   var location = response.results[0].geometry.location;
+   var latlng = [location.lat, location.lng];
 
-    // Get the city's name. In Mapbox this is called 'city'
-    var name = city;
-    var components = response.results[0];
-    for (var i = 0; i < components.length; i++) {
-      if (components[i].type === 'city') {
-        name = components[i].name;
-        break;
-      }
-    }
+   // Get the city's name. In google maps this is called 'locality'
+   var name = city;
+   var components = response.results[0].address_components;
+   for (var i = 0; i < components.length; i++) {
+     if (_.contains(components[i].types, 'locality')) {
+       name = components[i].long_name;
+       break;
+     }
+   }
 
-    callback.call(context || this, latlng, name);
-  });
+   callback.call(context || this, latlng, name);
+ });
 };
 
 app.utils.getNearbyGTFS = function(latlng, callback, context) {  
