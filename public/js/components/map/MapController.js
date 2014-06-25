@@ -11,9 +11,11 @@ app.MapController = app.Controller.extend({
       this.map = options.map;
       this.setupViews(options.lineId);
     } else {
-      var afterFetch = function() { this.setupViews(options.lineId); };
-      this.map = new app.Map({ id: options.mapId });
-      this.map.fetch({ success: _.bind(afterFetch, this) });
+      var afterFetch = function(response) {
+        this.map = new app.Map(response, { parse: true });
+        this.setupViews(options.lineId);
+      };
+      $.getJSON('/api/maps/' + options.mapId, _.bind(afterFetch, this));
     }
   },
 
