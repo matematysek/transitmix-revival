@@ -55,5 +55,10 @@
   left: 0;
   background: $primary-color;
   text-align: center;
-  line-height: 44px;
+  line-height: 27px;
+  padding: 8px 0;
+
+  .tip {
+    opacity: 0.5;
+  }
 }
