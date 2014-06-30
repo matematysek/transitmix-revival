@@ -35,7 +35,7 @@ SET default_with_oids = false;
 
 CREATE TABLE lines (
     name text,
-    speed integer,
+    speed double precision,
     color text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
