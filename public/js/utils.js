@@ -261,9 +261,18 @@ app.utils.formatCost = function(cost) {
 app.utils.diffTime = function(from, to) {
   var minutesIntoDay = function(time) {
     var hours = parseInt(time.split(':')[0], 10);
-    if (time.indexOf('pm') > -1 || time.indexOf('p') > -1) hours += 12;
+
+    var isAM = time.indexOf('am') > -1;
+    var isPM = time.indexOf('pm') > -1;
+    var isNoon = isPM && hours === 12;
+    var isMidnight = isAM && hours === 12;
+
+    if (isPM && !isNoon) hours += 12;
+    if (isMidnight) hours += 12;
+
     var minutes = 0;
     if (time.indexOf(':') > -1) minutes = parseInt(time.split(':')[1], 10);
+    
     return hours * 60 + minutes;
   };
 
