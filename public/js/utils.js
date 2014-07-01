@@ -281,7 +281,8 @@ app.utils.removeUndefined = function(object) {
 
 // Cycles through available line colors, starting at a random point
 app.utils.getNextColor = (function() {
-  var colors = ['#AD0101', '#0D7215', '#4E0963', '#0071CA'];
+  var colors = ['#AD0101', '#0D7215', '#4E0963', '#0071CA',
+                '#CE5504', '#B10086', '#049684', '#CC9B00',];
   var colorIndex = _.random(0, colors.length);
 
   return function() {
