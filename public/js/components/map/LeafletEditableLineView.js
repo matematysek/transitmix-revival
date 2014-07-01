@@ -106,7 +106,7 @@ app.LeafletEditableLineView = Backbone.View.extend({
       this.redrawMarkers();
       this.startDrawing();
     } else {
-      this.model.removeWaypoint(event.target.waypointIndex);
+      this.model.removeWaypoint(event.target.waypointIndex, this.ignoreRoads);
       this.redrawMarkers();
     }
 
