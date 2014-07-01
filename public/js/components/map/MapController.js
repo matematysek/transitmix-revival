@@ -41,6 +41,10 @@ app.MapController = app.Controller.extend({
       return;
     }
 
+    if (this.editableLine && this.editableLine.isDrawing) {
+      return;
+    }
+
     this._teardownSelectionViews();
 
     var selectedLine = this.map.get('lines').get(lineId);
