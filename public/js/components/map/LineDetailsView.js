@@ -7,8 +7,8 @@ app.LineDetailsView = app.BaseView.extend({
     '.name': 'name',
     '.speed': {
       observe: 'speed',
-      onGet: function(val) { return val+ ' mph'; },
-      onSet: function(val) { return parseInt(val, 10); },
+      onGet: function(val) { return val.toFixed(1) + ' mph'; },
+      onSet: function(val) { return parseFloat(val); },
     },
   },
 
