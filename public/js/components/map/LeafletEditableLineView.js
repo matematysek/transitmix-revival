@@ -127,7 +127,7 @@ app.LeafletEditableLineView = Backbone.View.extend({
     $(app.leaflet._container).addClass('showDrawingCursor');
     $('body').append('<div class="drawingInstructions">' +
       '<p>Click the map to start drawing a transit line.</p>' +
-      '<p class="tip">Tip: Hold shift to ignore roads.</p></div>');
+      '<p class="tip">Tip: To draw a straight line, hold shift.</p></div>');
     app.leaflet.on('click', function() {
       $('.drawingInstructions').remove();
     });
