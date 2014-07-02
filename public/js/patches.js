@@ -1,3 +1,8 @@
+// Make sure we're modifying the correct version of Leaflet
+if (L.version !== '0.7.2') {
+  throw new Error('Attempting to patch Leaflet ' + L.version + '. Only 0.7.2 is supported');
+}
+
 // Modify Draggable to ignore shift key. 
 L.Draggable.prototype._onDown = function(e) {
   this._moved = false;
