@@ -14,6 +14,7 @@ module Transitmix
         serve '/css', from: 'public/css'
 
         js :app, [
+          '/js/patches.js',
           '/js/app.js',
           '/js/utils.js',
           '/js/framework/*.js',
