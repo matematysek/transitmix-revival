@@ -269,7 +269,7 @@ app.utils.diffTime = function(from, to) {
     var hours = parseInt(time.split(':')[0], 10);
 
     var isAM = time.indexOf('am') > -1;
-    var isPM = time.indexOf('pm') > -1;
+    var isPM = time.indexOf('pm') > -1 || time.indexOf('p') > -1;
     var isNoon = isPM && hours === 12;
     var isMidnight = isAM && hours === 12;
 
