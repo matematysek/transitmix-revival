@@ -178,12 +178,12 @@ app.LeafletEditableLineView = Backbone.View.extend({
   },
 
   stopDrawing: function() {
-    this.isDrawing = false;
     this.delayedRedrawMarkers();
     this.removeDrawing();
   },
 
   removeDrawing: function() {
+    this.isDrawing = false;
     $(app.leaflet._container).removeClass('showDrawingCursor');
     $('.drawingInstructions').remove();
     app.leaflet.off('click', this.draw);
