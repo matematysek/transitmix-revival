@@ -7,9 +7,9 @@ app.LeafletEditableLineView = Backbone.View.extend({
       'stopDrawing', 'showInsert', 'beginInsert', 'updateInsert','finishInsert',
       'removeInsert');
 
-    this.throttledUpdateWaypoint = _.throttle(this.updateWaypoint, 150);
-    this.throttledShowDrawingLine = _.throttle(this.showDrawingLine, 150);
-    this.throttledUpdateInsert = _.throttle(this.updateInsert, 150);
+    this.throttledUpdateWaypoint = _.throttle(this.updateWaypoint, 250);
+    this.throttledShowDrawingLine = _.throttle(this.showDrawingLine, 250);
+    this.throttledUpdateInsert = _.throttle(this.updateInsert, 250);
 
     this.markers = [];
     this.isDrawing = false;

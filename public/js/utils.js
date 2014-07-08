@@ -4,12 +4,8 @@ app.utils = app.utils || {};
 // If an point.via is provided, the route will go through that point
 // E.g. getRoute({from: [20, 30], to: [23, 40]}, callback)
 // If options.ignoreRoads is true, returns a direct line between the two points.
-app.utils.getRoute = function(options, callback, context) {
-  // Flips from [lat, lng] to [lng, lat]
-  var flip = function(latlng) {
-    return [latlng[1], latlng[0]];
-  };
 
+app.utils.getRoute = function(options, callback, context) {
   var waypoints = [options.from, options.to];
   if (options.via) waypoints.splice(1, 0, options.via);
 
@@ -17,6 +13,41 @@ app.utils.getRoute = function(options, callback, context) {
     callback.call(context || this, waypoints);
     return;
   }
+
+  // Preferentially rely on mapzen's OSRM server. If it's failed,
+  // switch to Mapbox Smart Directions.
+  var routingEngine = app.utils._mapzenRouting;
+  if (!app.utils._mapzenEndpointWorking) routingEngine = app.utils._mapboxRouting;
+  routingEngine(waypoints, callback, context);
+};
+
+app.utils._mapzenEndpointWorking = true;
+app.utils._mapzenRouting = function(waypoints, callback, context) {
+  var encodedPoints = waypoints.map(function(latlng) {
+    return 'loc=' + latlng[0] + '%2C' + latlng[1];
+  }).join('&');
+  var url = 'http://osrm.test.mapzen.com/car/viaroute?' + encodedPoints;
+
+  $.ajax({
+    url: url,
+    dataType: 'json',
+    success: function(response) {
+      var geometry = response.route_geometry;
+      var coordinates = app.utils.decodeGeometry(geometry);
+      callback.call(context || this, coordinates);
+    },
+    error: function() {
+      console.log('Mapzen routing failed. Falling back to Mapbox.');
+      app.utils._mapzenEndpointWorking = false;
+    },
+  });
+};
+
+app.utils._mapboxRouting = function(waypoints, callback, context) {
+  // Flips from [lat, lng] to [lng, lat]
+  var flip = function(latlng) {
+    return [latlng[1], latlng[0]];
+  };
 
   waypoints = waypoints.map(flip).join(';');
   var url = 'http://api.tiles.mapbox.com/v3/codeforamerica.h6mlbj75/' +
