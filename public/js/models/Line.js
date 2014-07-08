@@ -8,21 +8,12 @@ app.Line = Backbone.Model.extend({
     var color = app.utils.getNextColor();
     var name = _.random(10, 99) + ' ' + app.utils.getRandomName();
 
-    var serviceWindows = new app.ServiceWindows([
-      { name: 'AM Peak', from: '7am', to: '10am', headway: 12 },
-      { name: 'Midday', from: '10am', to: '4pm', headway: 20 },
-      { name: 'PM Peak', from: '4pm', to: '8pm', headway: 12 },
-      { name: 'Evening', from: '8pm', to: '11pm', headway: 30 },
-      { name: 'Weekend', from: '8am', to: '11pm', headway: 30, isWeekend: true },
-    ]);
-
     return {
       color: color,
       coordinates: [], // A GeoJSON MultiLineString
       mapId: undefined,
       name: name,
-      serviceWindows: serviceWindows,
-      speed: 10.0,
+      serviceWindows: new app.ServiceWindows(),
     };
   },
 
@@ -48,6 +39,11 @@ app.Line = Backbone.Model.extend({
       name: response.name,
       serviceWindows: serviceWindows,
       speed: response.speed,
+      layover: response.layover,
+      hourlyCost: response.hourly_cost,
+      weekdaysPerYear: response.weekdays_per_year,
+      saturdaysPerYear: response.saturdays_per_year,
+      sundaysPerYear: response.sundays_per_year,
     };
 
     return app.utils.removeUndefined(attrs);
@@ -64,7 +60,12 @@ app.Line = Backbone.Model.extend({
       map_id: attrs.mapId,
       name: attrs.name,
       service_windows: serviceWindows,
+      hourly_cost: attrs.hourlyCost,
       speed: attrs.speed,
+      layover: attrs.layover,
+      weekdays_per_year: attrs.weekdaysPerYear,
+      saturdays_per_year: attrs.saturdaysPerYear,
+      sundays_per_year: attrs.sundaysPerYear,
     };
   },
 
@@ -210,9 +211,12 @@ app.Line = Backbone.Model.extend({
     // Double the distance because we're assuming roundtrip
     var distance = app.utils.calculateDistance(latlngs) * 2;
 
-    var map = this.collection.map;
-    var layover = map.get('layover');
-    var hourlyCost = map.get('hourlyCost');
+    var layover = this.get('layover');
+    var hourlyCost = this.get('hourlyCost');
+
+    var weekdays = this.get('weekdaysPerYear');
+    var saturdays = this.get('saturdaysPerYear');
+    var sundays = this.get('sundaysPerYear');
 
     var calculate = function(sw) {
       if (!sw.isValid()) {
@@ -228,10 +232,12 @@ app.Line = Backbone.Model.extend({
       var roundTripTime = (distance / speed) * (1 + layover) * 60;
       var buses = Math.ceil(roundTripTime / sw.get('headway'));
 
+      var daysPerYear = weekdays;
+      if (sw.get('isSaturday')) daysPerYear = saturdays;
+      if (sw.get('isSunday')) daysPerYear = sundays;
+      if (sw.get('isWeekend')) daysPerYear = saturdays + sundays;
 
-      var daysPerYear = sw.get('isWeekend') ? 110 : 255;
       var revenueHours = buses * hoursPerDay * daysPerYear;
-
       var costPerYear = revenueHours * hourlyCost;
 
       return {

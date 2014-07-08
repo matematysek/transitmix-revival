@@ -51,6 +51,12 @@ module Transitmix
         optional :zoom_level, type: String
         optional :layover, type: Float
         optional :hourly_cost, type: Integer
+        optional :service_windows, type: Array
+        optional :speed, type: Float
+        optional :weekdays_per_year, type: Integer
+        optional :saturdays_per_year, type: Integer
+        optional :sundays_per_year, type: Integer
+        # optional :prefer_service_hours, type: TrueClass
       end
 
       post '/api/maps' do

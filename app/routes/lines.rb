@@ -31,6 +31,11 @@ module Transitmix
         optional :speed, type: Float
         optional :color, type: String
         optional :service_windows, type: Array
+        optional :hourly_cost, type: Integer
+        optional :layover, type: Float
+        optional :weekdays_per_year, type: Integer
+        optional :saturdays_per_year, type: Integer
+        optional :sundays_per_year, type: Integer
       end
 
       post '/api/lines' do

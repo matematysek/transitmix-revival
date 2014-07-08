@@ -6,6 +6,7 @@ app.MapController = app.Controller.extend({
     this.listenTo(app.events, 'map:deleteLine',      this.deleteLine);
     this.listenTo(app.events, 'map:toggleNearby',    this.toggleNearby);
     this.listenTo(app.events, 'map:addNearbyLine',   this.addNearbyLine);
+    this.listenTo(app.events, 'map:toggleSettings',  this.toggleSettings);
 
     if (options.map) {
       this.map = options.map;
@@ -45,6 +46,8 @@ app.MapController = app.Controller.extend({
       return;
     }
 
+    if (this.mapSettingsView) this.removeSettings();
+
     this._teardownSelectionViews();
 
     var selectedLine = this.map.get('lines').get(lineId);
@@ -75,7 +78,7 @@ app.MapController = app.Controller.extend({
   addLine: function() {
     var afterSave = function(line) { app.events.trigger('map:selectLine', line.id); };
     var lines = this.map.get('lines');
-    lines.create({ mapId: this.map.id }, { success: afterSave });
+    lines.create(this.map.getLineDefaults(), { success: afterSave });
   },
 
   deleteLine: function(lineId) {
@@ -97,6 +100,8 @@ app.MapController = app.Controller.extend({
   },
 
   showNearby: function(latlng) {
+    if (this.mapSettingsView) this.removeSettings();
+
     if (this._cachedNearby) {
       this._showNearby(this._cachedNearby);
       return;
@@ -121,13 +126,14 @@ app.MapController = app.Controller.extend({
   addNearbyLine: function(line) {
     app.utils.getNearbyCoordinates(line.get('mapId'), line.id, function(coordinates) {
       var lines = this.map.get('lines');
+
       var attrs = _.clone(line.attributes);
       delete attrs.id;
+      delete attrs.mapId;
 
-      _.extend(attrs, {
-        mapId: this.map.id,
-        coordinates: coordinates,
-      });
+      var lineDefaults = this.map.getLineDefaults();
+
+      _.extend(attrs, lineDefaults, { coordinates: coordinates });
 
       var afterCreate = function(line) {
         app.events.trigger('map:selectLine', line.id);
@@ -136,11 +142,26 @@ app.MapController = app.Controller.extend({
     }, this);
   },
 
+  toggleSettings: function() {
+    if (this.mapSettingsView) {
+      this.removeSettings();
+      return;
+    }
+
+    this.mapSettingsView = new app.MapSettingsView({ model: this.map });
+    $('body').append(this.mapSettingsView.render().el);
+  },
+
+  removeSettings: function() {
+    this.mapSettingsView.remove();
+    this.mapSettingsView = false;
+  },
 
   teardownViews: function() {
     this._teardownSelectionViews();
     this.linesView.remove();
     if (this.nearbyView) this.nearbyView.remove();
+    if (this.mapSettingsView) this.removeSettings();
     this.mapExtrasView.remove();
   },
 });

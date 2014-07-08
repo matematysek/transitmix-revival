@@ -1,8 +1,8 @@
 .mapDetailsView {
   position: absolute;
-  top: 30px;
-  right: 30px;
-  width: 280px;
+  top: 15px;
+  right: 15px;
+  width: 295px;
 
   a {
     text-decoration: none;
@@ -37,6 +37,7 @@
       font-size: 30px;
       font-weight: 600;
       line-height: 36px;
+      margin-right: 10px;
     }
 
     .source {
@@ -50,8 +51,33 @@
       color: #B9B3CA;
       margin-top: 6px;
     }
+
+    .toggleSettings {
+      width: 22px;
+      height: 22px;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABcCAYAAADj79JYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NTc3MiwgMjAxNC8wMS8xMy0xOTo0NDowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NENDMUIyRTUwNTc2MTFFNDg1MDJBRkJDODc4MUQzNTUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NENDMUIyRTYwNTc2MTFFNDg1MDJBRkJDODc4MUQzNTUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0Q0MxQjJFMzA1NzYxMUU0ODUwMkFGQkM4NzgxRDM1NSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0Q0MxQjJFNDA1NzYxMUU0ODUwMkFGQkM4NzgxRDM1NSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgMOdWwAAAbDSURBVHja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');
+      position: absolute;
+      right: 14px;
+      top: 24px;
+      background-size: 22px 22px;
+      opacity: 0.7;
+    }
+
+    .toggleSettings:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
   }
 
+  .advancedStart {
+    background: $secondary-color;
+    padding: 16px 14px;
+    font-size: 14px;
+    line-height: 24px;
+    color: #B9B3CA;
+    margin-top: 9px;
+  }
+  
   .actions {
     background: $primary-color;
     position: relative;

@@ -1,5 +1,6 @@
 app.ServiceWindowView = app.BaseView.extend({
   templateId: '#tmpl-ServiceWindowView',
+  className: 'serviceWindow toggleParent',
 
   bindings: {
     '.windowName': 'name',
@@ -14,10 +15,12 @@ app.ServiceWindowView = app.BaseView.extend({
 
   events: {
     'keydown': 'modifyMinutes',
+    'click .toggle': 'toggle',
   },
 
-  initialize: function() {
-    this.listenTo(this.model, 'change', this.renderValid);
+  initialize: function(options) {
+    this.showToggle = options.showToggle;
+    this.listenTo(this.model, 'change', this.renderState);
   },
 
   parseMinutes: function(val) {
@@ -41,11 +44,21 @@ app.ServiceWindowView = app.BaseView.extend({
   },
 
   afterRender: function() {
-    this.renderValid();
+    this.renderState();
+    if (this.showToggle) this.$('.toggle').css('display', 'inline-block');
     this.stickit();
   },
 
-  renderValid: function() {
-    this.$el.toggleClass('isInvalid', !this.model.isValid());
+  renderState: function() {
+    if (this.showToggle) {
+      var enabled = !!this.model.get('enabled');
+      this.$el.toggleClass('enabled', enabled);
+    } else {
+      this.$el.toggleClass('isInvalid', !this.model.isValid());
+    }
+  },
+
+  toggle: function() {
+    this.model.set('enabled', !this.model.get('enabled'));
   },
 });
