@@ -26,7 +26,7 @@ app.utils._mapzenRouting = function(waypoints, callback, context) {
   var encodedPoints = waypoints.map(function(latlng) {
     return 'loc=' + latlng[0] + '%2C' + latlng[1];
   }).join('&');
-  var url = 'http://osrm.test.mapzen.com/car/viaroute?' + encodedPoints;
+  var url = 'http://osrm.mapzen.com/psv/viaroute?' + encodedPoints;
 
   $.ajax({
     url: url,
