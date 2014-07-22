@@ -104,7 +104,8 @@ app.Map = Backbone.Model.extend({
 
   getLineDefaults: function() {
     var enabled = this.get('serviceWindows').where({ enabled: true });
-    var filteredWindows = new app.ServiceWindows(enabled);
+    var cloned = _.map(enabled, function(item) { return item.toJSON(); });
+    var filteredWindows = new app.ServiceWindows(cloned);
 
     return {
       mapId: this.id,
