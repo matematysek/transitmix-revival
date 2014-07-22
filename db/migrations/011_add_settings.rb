@@ -16,6 +16,13 @@ Sequel.migration do
       add_column :saturdays_per_year, Integer, default: 55
       add_column :sundays_per_year, Integer, default: 55
     end
+
+    run <<-SQL
+      UPDATE lines
+      SET layover = maps.layover, hourly_cost = maps.hourly_cost
+      FROM maps
+      WHERE lines.map_id = maps.id;
+    SQL
   end
 
   down do
