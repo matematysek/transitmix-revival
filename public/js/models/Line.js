@@ -31,6 +31,12 @@ app.Line = Backbone.Model.extend({
       serviceWindows = new app.ServiceWindows(response.service_windows);
     }
 
+    // Import colors from GTFS
+    var gtfsColor = response.route_color;
+    if (gtfsColor && gtfsColor !== ' ' && gtfsColor !== '000000') {
+      response.color = '#' + gtfsColor;
+    }
+
     var attrs = {
       id: response.id,
       color: response.color,
