@@ -56,10 +56,16 @@
   <script type="text/template" id="tmpl-MapDetailsView">
     <header>
       <h1>{{ name }}</h1>
+      <div class="toggleSettings"></div>
       {# if (remixedFromId) { #}
         <div class="source">Remixed from <span class="remixedFrom">#{{ remixedFromId }}</span></div>
       {# } #}
-      <div class="stats">This map: {{ lineCount }} lines, {{ distance }} miles, {{ cost }} per year, {{ buses }} buses at peak</div>
+      <div class="stats">
+        This map: <label class="lineCount"></label> lines, 
+        <label class="distance"></label> miles, 
+        <label class="costWrapper"><label class="cost"></label> per year, </label>
+        <label class="hoursWrapper"><label class="hours"></label> hrs / year, </label>
+        <label class="buses"></label> buses at peak</div>
     </header>
 
     <div class="scrollable">
@@ -88,9 +94,13 @@
   <script type="text/template" id="tmpl-MapDetailsView-empty">
     <header>
       <h1>{{ name }}</h1>
+      <div class="toggleSettings"></div>
       <p>Lovely city you've got there. But it sure could use some transit.<!-- ' Fix syntax coloring in Sublime--></p>
       <p>Start by <span class="add">adding a transit line</span>.</p>
     </header>
+    <div class="advancedStart">
+      <p>Want more control? Then <span class="toggleSettingsText">configure the settings</span> first.</p>
+    </div>
   </script>
 
   <script type="text/template" id="tmpl-MapDetailsItemView">
@@ -130,7 +140,12 @@
       <h2>This line:</h2>
       <span class="distance">0 miles</span> <span class="showMileageOutputs"></span><br/>
       <span class="buses">0 buses</span> at peak <span class="showBusOutputs"></span><br/>
-      <span class="cost">$0</span> / year <span class="showCostOutputs"></span>
+      <div class="costWrapper">
+        <span class="cost">$0</span> / year <span class="showCostOutputs"></span>
+      </div>
+      <div class="revenueHoursWrapper" style="display:none">
+        <span class="bigRevenueHours"></span> / year <span class="showCostOutputs"></span>
+      </div>
     </div>
 
     <div class="outputs advancedOutputs mileageOutputs" style="background: {{ color3 }}">
@@ -146,15 +161,20 @@
     </div>
 
     <div class="outputs advancedOutputs costOutputs" style="background: {{ color3 }}">
-      <h2>Yearly operating cost:</h2>
+      <div class="dayCounts">
+        Assuming: <input type="text" class="weekdaysPerYear"> weekdays,<br/>
+        <input type="text" class="saturdaysPerYear"> saturdays,
+        and <input type="text" class="sundaysPerYear"> sundays.
+      </div>
+
       <span class="revenueHours">4504</span> service hours<br/>
       x <input type="text" class="hourlyCost"> per hour<br/>
       <p><a target="_blank" href="http://www.humantransit.org/02box.html">Read more</a> on transit costs.</p>
-
     </div>
   </script>
 
   <script type="text/template" id="tmpl-ServiceWindowView">
+    <span class="toggle" style="display:none"></span>
     <span class="windowName"></span>
     <input type="text" class="from"></span>
     <input type="text" class="to"></span>
@@ -164,6 +184,42 @@
   <script type="text/template" id="tmpl-NearbyEmptyView">
   <div class="apology">Sorry, we haven't loaded in bus lines for this city yet. But just send us a short note, and we'll get right to it.</div>
   <iframe height="419" allowTransparency="true" frameborder="0" scrolling="no" style="width:100%;border:none"  src="https://transitmix.wufoo.com/embed/zwhnrd40xiflgv/"><a href="https://transitmix.wufoo.com/forms/zwhnrd40xiflgv/">Fill out my Wufoo form!</a></iframe><div id="wuf-adv" style="font-family:inherit;font-size: small;color:#a7a7a7;text-align:center;display:block;">Use <a href="http://www.wufoo.com/gallery/templates/">Wufoo templates</a> to make your own HTML forms.</div>
+  </script>
+
+  <script type="text/template" id="tmpl-MapSettingsView">
+    <h2>Line Defaults</h2>
+    <div class="closeSettings">&#x2715;</div>
+
+    <div class="innerSettings"</div>
+      <div class="weekdays">
+        <h3>Service Windows</h3>
+        <div class="weekdayServiceWindows serviceWindows"></div>
+      </div>
+
+      <div class="weekends">
+        <div class="weekendServiceWindows serviceWindows"></div>
+      </div>
+
+      <div class="additional">
+        <h3>Advanced</h3>
+        <div class="item"><input type="text" class="speed"> avg. speed</div>
+        <div class="item"><input type="text" class="layover"> recovery time</div>
+        <div class="item"><input type="text" class="hourlyCost"> per hour</div>
+      </div>
+
+      <div class="additional">
+        <div class="item"><input type="text" class="weekdaysPerYear"> weekdays</div>
+        <div class="item"><input type="text" class="saturdaysPerYear"> saturdays</div>
+        <div class="item"><input type="text" class="sundaysPerYear"> sundays</div>
+      </div>
+
+      <div class="additional">
+        <div class="item toggleParent serviceHoursToggle"><div class="toggle"></div> Show service hours, not cost</div>
+        <div class="item">&nbsp;</div><div class="item">&nbsp;</div>
+      </div>
+    </div>
+
+    <p>Will apply to new lines. You can also <span class="applyToAll">apply to all existing lines</span>.</p>
   </script>
 
   <!-- libs -->

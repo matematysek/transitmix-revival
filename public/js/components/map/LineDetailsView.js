@@ -10,6 +10,19 @@ app.LineDetailsView = app.BaseView.extend({
       onGet: function(val) { return val.toFixed(1) + ' mph'; },
       onSet: function(val) { return parseFloat(val); },
     },
+    '.layover': {
+      observe: 'layover',
+      onGet: function(val) { return val*100 + '%'; },
+      onSet: function(val) { return parseInt(val, 10) / 100; },
+    },
+    '.hourlyCost': {
+      observe: 'hourlyCost',
+      onGet: function(val) { return '$' + val; },
+      onSet: function(val) { return parseInt(val.replace(/\D/g, ''), 10); },
+    },
+    '.weekdaysPerYear': 'weekdaysPerYear',
+    '.saturdaysPerYear': 'saturdaysPerYear',
+    '.sundaysPerYear': 'sundaysPerYear',
   },
 
   events: {
@@ -57,18 +70,10 @@ app.LineDetailsView = app.BaseView.extend({
     this.stickit();
 
     var map = this.model.collection.map;
-    this.stickit(map, {
-      '.layover': {
-        observe: 'layover',
-        onGet: function(val) { return val*100 + '%'; },
-        onSet: function(val) { return parseInt(val, 10) / 100; },
-      },
-      '.hourlyCost': {
-        observe: 'hourlyCost',
-        onGet: function(val) { return '$' + val; },
-        onSet: function(val) { return parseInt(val.replace(/\D/g, ''), 10); },
-      }
-    });
+    if (map.get('preferServiceHours')) {
+      this.$('.costWrapper').hide();
+      this.$('.revenueHoursWrapper').show();
+    }
   },
 
   updateCalculations: function() {
@@ -81,6 +86,7 @@ app.LineDetailsView = app.BaseView.extend({
     this.$('.buses').html(calcs.total.buses + ' buses');
     this.$('.cost').html(cost);
     this.$('.revenueHours').html(revenueHours);
+    this.$('.bigRevenueHours').html(revenueHours + ' hrs');
   },
 
   save: function(model, options) {

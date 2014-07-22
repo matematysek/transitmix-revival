@@ -299,21 +299,25 @@ app.utils.diffTime = function(from, to) {
   var minutesIntoDay = function(time) {
     var hours = parseInt(time.split(':')[0], 10);
 
-    var isAM = time.indexOf('am') > -1;
-    var isPM = time.indexOf('pm') > -1 || time.indexOf('p') > -1;
+    var isAM = time.indexOf('a') > -1;
+    var isPM = time.indexOf('p') > -1;
     var isNoon = isPM && hours === 12;
     var isMidnight = isAM && hours === 12;
 
     if (isPM && !isNoon) hours += 12;
     if (isMidnight) hours += 12;
 
-    var minutes = 0;
-    if (time.indexOf(':') > -1) minutes = parseInt(time.split(':')[1], 10);
+    var hasMinutes = time.indexOf(':') > -1 ;
+    var minutes = hasMinutes ? parseInt(time.split(':')[1], 10) : 0;
     
     return hours * 60 + minutes;
   };
 
   var diff = (minutesIntoDay(to) - minutesIntoDay(from));
+
+  // Handle overnight times
+  if (diff < 0) diff += 24 * 60;
+  
   return diff;
 };
 

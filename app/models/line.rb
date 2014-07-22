@@ -7,7 +7,8 @@ module Transitmix
       plugin :serialization, :json, :service_windows
 
       set_allowed_columns :coordinates, :name, :speed, :color, :map_id, 
-                          :service_windows
+                          :service_windows, :weekdays_per_year, :saturdays_per_year,
+                          :sundays_per_year, :layover, :hourly_cost
 
       # Used in a variety of export formats
       def to_flattened_lnglat

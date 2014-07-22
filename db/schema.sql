@@ -42,7 +42,12 @@ CREATE TABLE lines (
     coordinates text,
     map_id integer,
     id integer NOT NULL,
-    service_windows text
+    service_windows text,
+    layover double precision,
+    hourly_cost integer,
+    weekdays_per_year integer DEFAULT 255,
+    saturdays_per_year integer DEFAULT 55,
+    sundays_per_year integer DEFAULT 55
 );
 
 
@@ -78,7 +83,13 @@ CREATE TABLE maps (
     updated_at timestamp without time zone,
     remixed_from_id integer,
     layover double precision,
-    hourly_cost integer
+    hourly_cost integer,
+    service_windows text,
+    speed double precision,
+    weekdays_per_year integer DEFAULT 255,
+    saturdays_per_year integer DEFAULT 55,
+    sundays_per_year integer DEFAULT 55,
+    prefer_service_hours boolean
 );
 
 

@@ -1,0 +1,58 @@
+.serviceWindows {
+  line-height: 26px;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 14px 14px;
+  max-height: 276px;
+  overflow: auto;
+
+  input {
+    background: transparent;
+    color: white;
+    border: none;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.6);
+    padding-bottom: 2px;
+  }
+
+  input:hover {
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  .isInvalid {
+    opacity: 0.5;
+  }
+
+  .isInvalid input {
+    opacity: 0.5;
+  }
+
+  .windows>div {
+    margin-top: 5px;
+  }
+
+  .windowName, .from, .to, .headway {
+    display: inline-block;
+  }
+
+  .windowName {
+    width: 75px;
+  }
+
+  .from {
+    width: 48px;
+    margin-right: 5px;
+  }
+
+  .to {
+    width: 48px;
+    margin-right: 5px;
+  }
+
+  .headway {
+    width: 54px;
+  }
+}
