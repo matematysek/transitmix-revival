@@ -33,7 +33,7 @@ app.Line = Backbone.Model.extend({
 
     // Import colors from GTFS
     var gtfsColor = response.route_color;
-    if (gtfsColor && gtfsColor !== ' ' && gtfsColor !== '000000') {
+    if (gtfsColor && gtfsColor !== ' ' && gtfsColor !== '000000' && gtfsColor !== 'FFFFFF') {
       response.color = '#' + gtfsColor;
     }
 
