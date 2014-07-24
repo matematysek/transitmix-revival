@@ -121,9 +121,8 @@ app.Map = Backbone.Model.extend({
 
   // Apply the defaults to all the lines
   applyDefaultsToAll: function() {
-    var defaults = this.getLineDefaults();
     this.get('lines').forEach(function(line) {
-      line.set(defaults);
-    });
+      line.set(this.getLineDefaults());
+    }, this);
   },
 });
