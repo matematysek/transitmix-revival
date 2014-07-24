@@ -7,9 +7,9 @@ app.LeafletEditableLineView = Backbone.View.extend({
       'stopDrawing', 'showInsert', 'beginInsert', 'updateInsert','finishInsert',
       'removeInsert');
 
-    this.throttledUpdateWaypoint = _.throttle(this.updateWaypoint, 150);
-    this.throttledShowDrawingLine = _.throttle(this.showDrawingLine, 150);
-    this.throttledUpdateInsert = _.throttle(this.updateInsert, 150);
+    this.throttledUpdateWaypoint = _.throttle(this.updateWaypoint, 250);
+    this.throttledShowDrawingLine = _.throttle(this.showDrawingLine, 250);
+    this.throttledUpdateInsert = _.throttle(this.updateInsert, 250);
 
     this.markers = [];
     this.isDrawing = false;
@@ -17,6 +17,12 @@ app.LeafletEditableLineView = Backbone.View.extend({
 
     // Click anywhere on the map to clearSelection
     app.leaflet.on('click', this.clearSelection);
+
+    // Track shift key to selectively enable and disable routing
+    this.ignoreRoads = false;
+    var checkShift = function(e) { this.ignoreRoads = e.shiftKey; };
+    var boundCheckShift = this.boundCheckShift = _.bind(checkShift, this);
+    $(document).on('keyup keydown', boundCheckShift);
   },
 
   render: function() {
@@ -87,7 +93,7 @@ app.LeafletEditableLineView = Backbone.View.extend({
   },
 
   updateWaypoint: function(event) {
-    this.model.updateWaypoint(event.target._latlng, event.target.waypointIndex);
+    this.model.updateWaypoint(event.target._latlng, event.target.waypointIndex, this.ignoreRoads);
   },
 
   removeWaypoint: function(event) {
@@ -100,7 +106,7 @@ app.LeafletEditableLineView = Backbone.View.extend({
       this.redrawMarkers();
       this.startDrawing();
     } else {
-      this.model.removeWaypoint(event.target.waypointIndex);
+      this.model.removeWaypoint(event.target.waypointIndex, this.ignoreRoads);
       this.redrawMarkers();
     }
 
@@ -120,7 +126,8 @@ app.LeafletEditableLineView = Backbone.View.extend({
     // Simple UI for drawing mode. 
     $(app.leaflet._container).addClass('showDrawingCursor');
     $('body').append('<div class="drawingInstructions">' +
-      'Click the map to start drawing a transit line.</div>');
+      '<p>Click the map to start drawing a transit line.</p>' +
+      '<p class="tip">Tip: To draw a straight line, hold shift.</p></div>');
     app.leaflet.on('click', function() {
       $('.drawingInstructions').remove();
     });
@@ -138,7 +145,7 @@ app.LeafletEditableLineView = Backbone.View.extend({
   // Update the model with the click, and draw a dummy marker with different
   // interactions. When we're done drawing, draw in the real markers.
   draw: function(event) {
-    this.model.addWaypoint(event.latlng);
+    this.model.addWaypoint(event.latlng, this.ignoreRoads);
 
     // Show the click-to-finish tooltip only on the last drawn marker,
     // and only if we've drawn at least two points.
@@ -164,18 +171,19 @@ app.LeafletEditableLineView = Backbone.View.extend({
     app.utils.getRoute({
       from: _.last(this.model.getWaypoints()),
       to: _.values(event.latlng),
+      ignoreRoads: this.ignoreRoads,
     }, function(coordinates) {
       this.drawingLine.setLatLngs(coordinates);
     }, this);
   },
 
   stopDrawing: function() {
-    this.isDrawing = false;
     this.delayedRedrawMarkers();
     this.removeDrawing();
   },
 
   removeDrawing: function() {
+    this.isDrawing = false;
     $(app.leaflet._container).removeClass('showDrawingCursor');
     $('.drawingInstructions').remove();
     app.leaflet.off('click', this.draw);
@@ -240,16 +248,16 @@ app.LeafletEditableLineView = Backbone.View.extend({
 
   beginInsert: function(event) {
     this.isInserting = true;
-    this.model.insertWaypoint(event.target._latlng, event.target.waypointIndex);
+    this.model.insertWaypoint(event.target._latlng, event.target.waypointIndex, this.ignoreRoads);
   },
 
   updateInsert: function(event) {
-    this.model.updateWaypoint(event.target._latlng, event.target.waypointIndex);
+    this.model.updateWaypoint(event.target._latlng, event.target.waypointIndex, this.ignoreRoads);
   },
 
   finishInsert: function(event) {
     this.isInserting = false;
-    this.model.updateWaypoint(event.target._latlng, event.target.waypointIndex);
+    this.model.updateWaypoint(event.target._latlng, event.target.waypointIndex, this.ignoreRoads);
     this.delayedRedrawMarkers();
     this.removeInsert();
   },
@@ -270,6 +278,7 @@ app.LeafletEditableLineView = Backbone.View.extend({
     this.markers.forEach(function(m) { app.leaflet.removeLayer(m); });
     app.leaflet.removeLayer(this.line);
     app.leaflet.off('click', this.clearSelection);
+    $(document).off('keyup keydown', this.boundCheckShift);
     Backbone.View.prototype.remove.apply(this, arguments);
   },
 

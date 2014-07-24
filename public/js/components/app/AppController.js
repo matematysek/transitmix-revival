@@ -11,7 +11,11 @@ app.AppController = app.Controller.extend({
   },
 
   setupViews: function() {
-    var options = { tileLayer: { detectRetina: true } };
+    var options = {
+      tileLayer: { detectRetina: true },
+      infoControl: false,
+      boxZoom: false,
+    };
     app.leaflet = L.mapbox.map('map', 'codeforamerica.h6mlbj75', options);
 
     this.feedbackView = new app.FeedbackView();

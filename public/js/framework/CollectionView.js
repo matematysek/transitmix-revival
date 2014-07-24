@@ -3,11 +3,14 @@
 app.CollectionView = Backbone.View.extend({
   initialize: function(options) {
     this.itemView = options.view;
+    this.itemViewOptions = options.viewOptions;
 
     this.rendered = false;
     this.views = [];
     this.byId = {};
-    options.collection.each(this.appendView, this);
+    options.collection.each(function(item) {
+      if (!options.filter || options.filter(item)) this.appendView(item);
+    }, this);
 
     this.listenTo(options.collection, 'add', this.appendView);
     this.listenTo(options.collection, 'remove', this.removeView);
@@ -26,7 +29,8 @@ app.CollectionView = Backbone.View.extend({
   },
 
   appendView: function(item) {
-    var view = new this.itemView({ model: item });
+    var options = _.extend({ model: item }, this.itemViewOptions);
+    var view = new this.itemView(options);
     this.views.push(view);
     this.byId[item.cid] = view;
     if (this.rendered) this.$el.append(view.render().el);

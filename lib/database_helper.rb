@@ -2,10 +2,10 @@ require 'dotenv'
 Dotenv.load
 
 require 'dedent'
+require 'sequel'
 require 'shellwords'
 require 'uri'
 
-require_relative '../app'
 Sequel.extension :migration
 
 module DatabaseHelper
@@ -20,16 +20,20 @@ module DatabaseHelper
     end
   TEMPLATE
 
-  def app
-    Transitmix::App
+  def environment
+    ENV['RACK_ENV'] ||= 'development'
+  end
+
+  def database_url
+    ENV['DATABASE_URL'] ||= "postgres://localhost/transitmix_#{environment}"
   end
 
   def database
-    app.database
+    @database ||= Sequel.connect(database_url)
   end
 
   def app_root
-    Shellwords.shellescape(app.root)
+    Shellwords.shellescape(File.expand_path('../../', __FILE__))
   end
 
   def migration_path
@@ -71,7 +75,7 @@ module DatabaseHelper
   end
 
   def drop_db
-    Sequel::Model.db.disconnect
+    database.disconnect
     pg_command("dropdb #{db_name}")
   end
 

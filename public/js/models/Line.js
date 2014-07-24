@@ -8,21 +8,12 @@ app.Line = Backbone.Model.extend({
     var color = app.utils.getNextColor();
     var name = _.random(10, 99) + ' ' + app.utils.getRandomName();
 
-    var serviceWindows = new app.ServiceWindows([
-      { name: 'AM Peak', from: '7am', to: '10am', headway: 12 },
-      { name: 'Midday', from: '10am', to: '4pm', headway: 20 },
-      { name: 'PM Peak', from: '4pm', to: '8pm', headway: 12 },
-      { name: 'Evening', from: '8pm', to: '11pm', headway: 30 },
-      { name: 'Weekend', from: '8am', to: '11pm', headway: 30, isWeekend: true },
-    ]);
-
     return {
       color: color,
       coordinates: [], // A GeoJSON MultiLineString
       mapId: undefined,
       name: name,
-      serviceWindows: serviceWindows,
-      speed: 10,
+      serviceWindows: new app.ServiceWindows(),
     };
   },
 
@@ -40,6 +31,12 @@ app.Line = Backbone.Model.extend({
       serviceWindows = new app.ServiceWindows(response.service_windows);
     }
 
+    // Import colors from GTFS
+    var gtfsColor = response.route_color;
+    if (gtfsColor && gtfsColor !== ' ' && gtfsColor !== '000000' && gtfsColor !== 'FFFFFF') {
+      response.color = '#' + gtfsColor;
+    }
+
     var attrs = {
       id: response.id,
       color: response.color,
@@ -48,6 +45,11 @@ app.Line = Backbone.Model.extend({
       name: response.name,
       serviceWindows: serviceWindows,
       speed: response.speed,
+      layover: response.layover,
+      hourlyCost: response.hourly_cost,
+      weekdaysPerYear: response.weekdays_per_year,
+      saturdaysPerYear: response.saturdays_per_year,
+      sundaysPerYear: response.sundays_per_year,
     };
 
     return app.utils.removeUndefined(attrs);
@@ -64,12 +66,17 @@ app.Line = Backbone.Model.extend({
       map_id: attrs.mapId,
       name: attrs.name,
       service_windows: serviceWindows,
+      hourly_cost: attrs.hourlyCost,
       speed: attrs.speed,
+      layover: attrs.layover,
+      weekdays_per_year: attrs.weekdaysPerYear,
+      saturdays_per_year: attrs.saturdaysPerYear,
+      sundays_per_year: attrs.sundaysPerYear,
     };
   },
 
   // Extends the line to the given latlng, routing in-between
-  addWaypoint: function(latlng) {
+  addWaypoint: function(latlng, ignoreRoads) {
     latlng = _.values(latlng);
     var coordinates = _.clone(this.get('coordinates'));
 
@@ -82,31 +89,33 @@ app.Line = Backbone.Model.extend({
     app.utils.getRoute({
       from: _.last(this.getWaypoints()),
       to: latlng,
+      ignoreRoads: ignoreRoads,
     }, function(route) {
       coordinates.push(route);
       this.save({ coordinates: coordinates });
     }, this);
   },
 
-  updateWaypoint: function(latlng, index) {
+  updateWaypoint: function(latlng, index, ignoreRoads) {
     latlng = _.values(latlng);
 
     if (index === 0) {
-      this._updateFirstWaypoint(latlng);
+      this._updateFirstWaypoint(latlng, ignoreRoads);
     } else if (index === this.get('coordinates').length - 1) {
-      this._updateLastWaypoint(latlng);
+      this._updateLastWaypoint(latlng, ignoreRoads);
     } else {
-      this._updateMiddleWaypoint(latlng, index);
+      this._updateMiddleWaypoint(latlng, index, ignoreRoads);
     }
   },
 
-  _updateFirstWaypoint: function(latlng) {
+  _updateFirstWaypoint: function(latlng, ignoreRoads) {
     var coordinates = _.clone(this.get('coordinates'));
     var secondWaypoint = _.last(coordinates[1]);
 
     app.utils.getRoute({
       from: latlng,
       to: secondWaypoint,
+      ignoreRoads: ignoreRoads,
     }, function(route) {
       coordinates[0] = [route[0]];
       coordinates[1] = route;
@@ -114,7 +123,7 @@ app.Line = Backbone.Model.extend({
     }, this);
   },
 
-  _updateMiddleWaypoint: function(latlng, index) {
+  _updateMiddleWaypoint: function(latlng, index, ignoreRoads) {
     var coordinates = _.clone(this.get('coordinates'));
     var prevWaypoint = _.last(coordinates[index - 1]);
     var nextWaypoint = _.last(coordinates[index + 1]);
@@ -123,6 +132,7 @@ app.Line = Backbone.Model.extend({
       from: prevWaypoint,
       via: latlng,
       to: nextWaypoint,
+      ignoreRoads: ignoreRoads,
     }, function(route) {
       var closest = app.utils.indexOfClosest(route, latlng);
       coordinates[index] = route.slice(0, closest + 1);
@@ -131,30 +141,31 @@ app.Line = Backbone.Model.extend({
     }, this);
   },
 
-  _updateLastWaypoint: function(latlng) {
+  _updateLastWaypoint: function(latlng, ignoreRoads) {
     var coordinates = _.clone(this.get('coordinates'));
     var penultimateWaypoint = _.last(coordinates[coordinates.length - 2]);
 
     app.utils.getRoute({
       from: penultimateWaypoint,
-      to: latlng
+      to: latlng,
+      ignoreRoads: ignoreRoads,
     }, function(route) {
       coordinates[coordinates.length - 1] = route;
       this.save({ coordinates: coordinates });
     }, this);
   },
 
-  insertWaypoint: function(latlng, index) {
+  insertWaypoint: function(latlng, index, ignoreRoads) {
     var coordinates = _.clone(this.get('coordinates'));
     var prevWaypoint = _.last(coordinates[index - 1]);
     var newSegment = [prevWaypoint, latlng];
 
     coordinates.splice(index, 0, newSegment);
     this.set({ coordinates: coordinates }, { silent: true });
-    this.updateWaypoint(latlng, index);
+    this.updateWaypoint(latlng, index, ignoreRoads);
   },
 
-  removeWaypoint: function(index) {
+  removeWaypoint: function(index, ignoreRoads) {
     var coordinates = _.clone(this.get('coordinates'));
 
     // If we only have one point, just reset coordinates to an empty array.
@@ -183,7 +194,7 @@ app.Line = Backbone.Model.extend({
     var nextWaypoint = _.last(coordinates[index + 1]);
     coordinates.splice(index, 1);
     this.set({ coordinates: coordinates }, { silent: true });
-    this.updateWaypoint(nextWaypoint, index);
+    this.updateWaypoint(nextWaypoint, index, ignoreRoads);
   },
 
   clearWaypoints: function() {
@@ -206,9 +217,12 @@ app.Line = Backbone.Model.extend({
     // Double the distance because we're assuming roundtrip
     var distance = app.utils.calculateDistance(latlngs) * 2;
 
-    var map = this.collection.map;
-    var layover = map.get('layover');
-    var hourlyCost = map.get('hourlyCost');
+    var layover = this.get('layover');
+    var hourlyCost = this.get('hourlyCost');
+
+    var weekdays = this.get('weekdaysPerYear');
+    var saturdays = this.get('saturdaysPerYear');
+    var sundays = this.get('sundaysPerYear');
 
     var calculate = function(sw) {
       if (!sw.isValid()) {
@@ -224,10 +238,12 @@ app.Line = Backbone.Model.extend({
       var roundTripTime = (distance / speed) * (1 + layover) * 60;
       var buses = Math.ceil(roundTripTime / sw.get('headway'));
 
+      var daysPerYear = weekdays;
+      if (sw.get('isSaturday')) daysPerYear = saturdays;
+      if (sw.get('isSunday')) daysPerYear = sundays;
+      if (sw.get('isWeekend')) daysPerYear = saturdays + sundays;
 
-      var daysPerYear = sw.get('isWeekend') ? 110 : 255;
       var revenueHours = buses * hoursPerDay * daysPerYear;
-
       var costPerYear = revenueHours * hourlyCost;
 
       return {

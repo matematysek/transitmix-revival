@@ -1,8 +1,8 @@
 .lineDetailsView {
   position: absolute;
-  top: 30px;
-  right: 30px;
-  width: 280px;
+  top: 15px;
+  right: 15px;
+  width: 295px;
 
   input {
     background: transparent;
@@ -99,47 +99,7 @@
       }
     }
   }
-
-  .serviceWindows {
-    line-height: 26px;
-    color: rgba(255, 255, 255, 0.5);
-    padding: 14px 14px;
-
-    .isInvalid {
-      opacity: 0.5;
-    }
-
-    .isInvalid input {
-      opacity: 0.5;
-    }
-
-    .windows>div {
-      margin-top: 5px;
-    }
-
-    .windowName, .from, .to, .headway {
-      display: inline-block;
-    }
-
-    .windowName {
-      width: 75px;
-    }
-
-    .from {
-      width: 48px;
-      margin-right: 5px;
-    }
-
-    .to {
-      width: 48px;
-      margin-right: 5px;
-    }
-
-    .headway {
-      width: 54px;
-    }
-  }
-
+  
   .outputs {
     padding: 14px 14px;
     color: rgba(255, 255, 255, 0.5);
@@ -182,7 +142,7 @@
   .advancedOutputs {
     position: absolute;
     width: 300px;
-    right: 285px;
+    right: 300px;
     bottom: 0;
 
     // Patch the gap so mouseleave doesn't trigger early
@@ -197,7 +157,7 @@
     }
 
     .speed {
-      width: 90px;
+      width: 110px;
     }
 
     .layover {
@@ -206,6 +166,16 @@
 
     .hourlyCost {
       width: 60px;
+    }
+
+    .dayCounts {
+      font-size: 15px;
+      line-height: 28px;
+    }
+
+    .weekdaysPerYear, .saturdaysPerYear, .sundaysPerYear {
+      width: 30px;
+      text-align: center;
     }
   }
 

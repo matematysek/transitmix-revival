@@ -3,16 +3,53 @@ app.utils = app.utils || {};
 // Returns a set of coordinates that connect between 'from' and 'to' latlngs
 // If an point.via is provided, the route will go through that point
 // E.g. getRoute({from: [20, 30], to: [23, 40]}, callback)
-app.utils.getRoute = function(latlngs, callback, context) {
+// If options.ignoreRoads is true, returns a direct line between the two points.
+
+app.utils.getRoute = function(options, callback, context) {
+  var waypoints = [options.from, options.to];
+  if (options.via) waypoints.splice(1, 0, options.via);
+
+  if (options.ignoreRoads) {
+    callback.call(context || this, waypoints);
+    return;
+  }
+
+  // Preferentially rely on mapzen's OSRM server. If it's failed,
+  // switch to Mapbox Smart Directions.
+  var routingEngine = app.utils._mapzenRouting;
+  if (!app.utils._mapzenEndpointWorking) routingEngine = app.utils._mapboxRouting;
+  routingEngine(waypoints, callback, context);
+};
+
+app.utils._mapzenEndpointWorking = true;
+app.utils._mapzenRouting = function(waypoints, callback, context) {
+  var encodedPoints = waypoints.map(function(latlng) {
+    return 'loc=' + latlng[0] + '%2C' + latlng[1];
+  }).join('&');
+  var url = 'http://osrm.mapzen.com/psv/viaroute?' + encodedPoints;
+
+  $.ajax({
+    url: url,
+    dataType: 'json',
+    success: function(response) {
+      var geometry = response.route_geometry;
+      var coordinates = app.utils.decodeGeometry(geometry);
+      callback.call(context || this, coordinates);
+    },
+    error: function() {
+      console.log('Mapzen routing failed. Falling back to Mapbox.');
+      app.utils._mapzenEndpointWorking = false;
+    },
+  });
+};
+
+app.utils._mapboxRouting = function(waypoints, callback, context) {
   // Flips from [lat, lng] to [lng, lat]
   var flip = function(latlng) {
     return [latlng[1], latlng[0]];
   };
 
-  var waypoints = [latlngs.from, latlngs.to];
-  if (latlngs.via) waypoints.splice(1, 0, latlngs.via);
   waypoints = waypoints.map(flip).join(';');
-
   var url = 'http://api.tiles.mapbox.com/v3/codeforamerica.h6mlbj75/' +
   'directions/driving/' + waypoints + '.json?geometry=polyline';
 
@@ -58,29 +95,29 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // Geocode a city into a latlng and a more formalized city name 
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
-  var geocoder = L.mapbox.geocoder('codeforamerica.h6mlbj75');
-  geocoder.query(city, function(err, response) {
+ var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city);
 
-    if (err || response.results.length === 0) {
-      // TODO: add displayed error message
-      console.log('Unable to geocode city. Womp Womp.', err);
-    }
+ $.getJSON(url, function(response) {
+   if (response.error || response.results.length === 0) {
+     console.log('Unable to geocode city. Womp Womp.', response.error);
+   }
 
-    // Get the coordinates for the center of the city
-    var latlng = response.latlng;
+   // Get the coordinates for the center of the city
+   var location = response.results[0].geometry.location;
+   var latlng = [location.lat, location.lng];
 
-    // Get the city's name. In Mapbox this is called 'city'
-    var name = city;
-    var components = response.results[0];
-    for (var i = 0; i < components.length; i++) {
-      if (components[i].type === 'city') {
-        name = components[i].name;
-        break;
-      }
-    }
+   // Get the city's name. In google maps this is called 'locality'
+   var name = city;
+   var components = response.results[0].address_components;
+   for (var i = 0; i < components.length; i++) {
+     if (_.contains(components[i].types, 'locality')) {
+       name = components[i].long_name;
+       break;
+     }
+   }
 
-    callback.call(context || this, latlng, name);
-  });
+   callback.call(context || this, latlng, name);
+ });
 };
 
 app.utils.getNearbyGTFS = function(latlng, callback, context) {  
@@ -261,13 +298,26 @@ app.utils.formatCost = function(cost) {
 app.utils.diffTime = function(from, to) {
   var minutesIntoDay = function(time) {
     var hours = parseInt(time.split(':')[0], 10);
-    if (time.indexOf('pm') > -1 || time.indexOf('p') > -1) hours += 12;
-    var minutes = 0;
-    if (time.indexOf(':') > -1) minutes = parseInt(time.split(':')[1], 10);
+
+    var isAM = time.indexOf('a') > -1;
+    var isPM = time.indexOf('p') > -1;
+    var isNoon = isPM && hours === 12;
+    var isMidnight = isAM && hours === 12;
+
+    if (isPM && !isNoon) hours += 12;
+    if (isMidnight) hours += 12;
+
+    var hasMinutes = time.indexOf(':') > -1 ;
+    var minutes = hasMinutes ? parseInt(time.split(':')[1], 10) : 0;
+    
     return hours * 60 + minutes;
   };
 
   var diff = (minutesIntoDay(to) - minutesIntoDay(from));
+
+  // Handle overnight times
+  if (diff < 0) diff += 24 * 60;
+  
   return diff;
 };
 
@@ -281,7 +331,8 @@ app.utils.removeUndefined = function(object) {
 
 // Cycles through available line colors, starting at a random point
 app.utils.getNextColor = (function() {
-  var colors = ['#AD0101', '#0D7215', '#4E0963', '#0071CA'];
+  var colors = ['#AD0101', '#0D7215', '#4E0963', '#0071CA',
+                '#CE5504', '#B10086', '#049684', '#CC9B00',];
   var colorIndex = _.random(0, colors.length);
 
   return function() {
@@ -309,4 +360,45 @@ app.utils.getBaseUrl = function() {
   } else {
       return window.location.origin;
   }
+};
+
+// Natural string sorting
+// http://www.overset.com/2008/09/01/javascript-natural-sort-algorithm/
+app.utils.naturalSort = function naturalSort (a, b) {
+    var re = /(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi,
+        sre = /(^[ ]*|[ ]*$)/g,
+        dre = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/,
+        hre = /^0x[0-9a-f]+$/i,
+        ore = /^0/,
+        i = function(s) { return (''+s).toLowerCase(); },
+        // convert all to strings strip whitespace
+        x = i(a).replace(sre, '') || '',
+        y = i(b).replace(sre, '') || '',
+        // chunk/tokenize
+        xN = x.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
+        yN = y.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
+        // numeric, hex or date detection
+        xD = parseInt(x.match(hre)) || (xN.length !== 1 && x.match(dre) && Date.parse(x)),
+        yD = parseInt(y.match(hre)) || xD && y.match(dre) && Date.parse(y) || null,
+        oFxNcL, oFyNcL;
+    // first try and sort Hex codes or Dates
+    if (yD)
+        if ( xD < yD ) return -1;
+        else if ( xD > yD ) return 1;
+    // natural sorting through split numeric strings and default strings
+    for(var cLoc=0, numS=Math.max(xN.length, yN.length); cLoc < numS; cLoc++) {
+        // find floats not starting with '0', string or 0 if not defined (Clint Priest)
+        oFxNcL = !(xN[cLoc] || '').match(ore) && parseFloat(xN[cLoc]) || xN[cLoc] || 0;
+        oFyNcL = !(yN[cLoc] || '').match(ore) && parseFloat(yN[cLoc]) || yN[cLoc] || 0;
+        // handle numeric vs string comparison - number < string - (Kyle Adams)
+        if (isNaN(oFxNcL) !== isNaN(oFyNcL)) { return (isNaN(oFxNcL)) ? 1 : -1; }
+        // rely on string comparison if different types - i.e. '02' < 2 != '02' < '2'
+        else if (typeof oFxNcL !== typeof oFyNcL) {
+            oFxNcL += '';
+            oFyNcL += '';
+        }
+        if (oFxNcL < oFyNcL) return -1;
+        if (oFxNcL > oFyNcL) return 1;
+    }
+    return 0;
 };
