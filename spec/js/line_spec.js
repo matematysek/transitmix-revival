@@ -10,7 +10,8 @@ describe("Line Calculations", function() {
 
     simpleServiceWindowsWithWeekend = new app.ServiceWindows([
       { name: "All Day", from: "7am", to: "5pm", headway: 60},
-      { name: "Weekend", from: "7am", to: "5pm", headway: 60, isWeekend: true}
+      { name: "All Saturday", from: "7am", to: "5pm", headway: 60, isSaturday: true},
+      { name: "All Sunday", from: "7am", to: "5pm", headway: 60, isSunday: true}
     ]);
 
     // A line that's .5 miles one way, 1 mile two ways
@@ -19,7 +20,7 @@ describe("Line Calculations", function() {
 
   it("calculates that there are 2550 service hours if only one bus used on weekdays", function() {
     var map = new app.Map();
-    var line = new app.Line();
+    var line = new app.Line(map.getLineDefaults());
     var lines = new app.Lines([line]);
 
     map.lines = lines;
@@ -32,7 +33,8 @@ describe("Line Calculations", function() {
 
   it("calculates that there are 3650 service hours if only one bus used every day", function() {
     var map = new app.Map();
-    var line = new app.Line();
+    var line = new app.Line(map.getLineDefaults());
+
     var lines = new app.Lines([line]);
 
     map.lines = lines;
