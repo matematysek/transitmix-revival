@@ -8,6 +8,3 @@ Dir['./lib/tasks/**/*.rake'].each { |f| load(f) }
 desc 'Run the entire test suite'
 task default: 'test:all'
 
-#require 'jasmine'
-#load 'jasmine/tasks/jasmine.rake'
-#ENV['JASMINE_CONFIG_PATH'] = 'spec/js/support/jasmine.yml'
