@@ -22,7 +22,7 @@ module Sinatra
   protected
 
     def self.registered(app)
-      app.set :database, ->{ ENV['DATABASE_URL'] || "postgres://localhost/transitmix_#{environment}" }
+      app.set :database, ->{ ENV['DATABASE_URL'] || "postgres://localhost/transitmix_#{app.environment}" }
 
       if app.development?
         app.database.loggers << Logger.new(STDOUT)

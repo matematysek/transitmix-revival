@@ -11,11 +11,18 @@ namespace :test do
     Rake::Task[:spec].invoke
   end
 
-  task :js do
+  task :jasmine do
     ENV['RACK_ENV'] = 'test'
     require 'jasmine'
     load 'jasmine/tasks/jasmine.rake'
     ENV['JASMINE_CONFIG_PATH'] = 'spec/js/support/jasmine.yml'
-    Rake::Task['jasmine:ci'].invoke
+  end
+
+  task js: :jasmine do
+      Rake::Task['jasmine:ci'].invoke
+  end
+
+  task jasmine_server: :jasmine do
+      Rake::Task['jasmine'].invoke
   end
 end
