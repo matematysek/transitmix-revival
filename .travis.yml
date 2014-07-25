@@ -4,13 +4,5 @@ rvm:
   - 2.1.1
 before_script:
   - bundle exec rake db:create db:migrate DATABASE_URL=postgres://localhost/transitmix_test
-deploy:
-  provider: heroku
-  api_key:
-    secure: T3UJNJoh00GOsvRNOvsf66vG45ZrjLo/vxKRGUjMEcebLNZFTuRpJSdIIK/pNVkxNsCQnkBaiYbAUX0WTeCS8p6LM4CULgY+llFnpQ1/kN2urZOi/OdNu9CiLGrbNYdIobnEWH3mfhwhlAMnppBaCqq8G1YPcpYQRKSpJGuqwvo=
-  app: transitmix-staging
-  run:
-    - "rake db:migrate"
-    - restart
 notifications:
   webhooks: http://project-monitor.codeforamerica.org/projects/b4187edb-11eb-429e-bc0a-9eb92f6eead6/status
