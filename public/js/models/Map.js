@@ -43,6 +43,7 @@ app.Map = Backbone.Model.extend({
     // Automatically save after changes, at most once per second
     var debouncedSaved = _.debounce(function() { this.save(); }, 1000);
     this.on('change', debouncedSaved, this);
+    this.get('serviceWindows').on('change', debouncedSaved, this);
   },
 
   parse: function(response) {
@@ -69,10 +70,11 @@ app.Map = Backbone.Model.extend({
       hourlyCost: response.hourly_cost,
       layover: response.layover,
       speed: response.speed,
+      serviceWindows: serviceWindows,
       weekdaysPerYear: response.weekdays_per_year,
       saturdaysPerYear: response.saturdays_per_year,
       sundaysPerYear: response.sundays_per_year,
-
+      
       preferServiceHours: response.prefer_service_hours,
     };
 
@@ -89,7 +91,7 @@ app.Map = Backbone.Model.extend({
       remixed_from_id: attrs.remixedFromId,
       zoom_level: attrs.zoomLevel,
 
-      service_windows: attrs.serviceWindows,
+      service_windows: attrs.serviceWindows.toJSON(),
       hourly_cost: attrs.hourlyCost,
       layover: attrs.layover,
       speed: attrs.speed,
