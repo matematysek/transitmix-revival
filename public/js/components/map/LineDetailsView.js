@@ -77,12 +77,22 @@ app.LineDetailsView = app.BaseView.extend({
   },
 
   updateCalculations: function() {
+    var map = this.model.collection.map;
     var calcs = this.model.getCalculations();
     var cost = app.utils.formatCost(calcs.total.cost);
     var revenueHours = app.utils.addCommas(calcs.total.revenueHours);
 
-    this.$('.distance').html(calcs.distance.toFixed(2) + ' miles');
-    this.$('.halfDistance').html((calcs.distance/2).toFixed(2) + ' miles');    
+    var distance, halfDistance;
+    if (map.get('preferMetricUnits')) {
+      distance = app.utils.milesToKilometers(calcs.distance).toFixed(2) + ' km';
+      halfDistance = app.utils.milesToKilometers(calcs.distance / 2).toFixed(2) + ' km';
+    } else {
+      distance = calcs.distance.toFixed(2) + ' miles';
+      halfDistance = (calcs.distance/2).toFixed(2) + ' miles';
+    }
+
+    this.$('.distance').html(distance);
+    this.$('.halfDistance').html(halfDistance);    
     this.$('.buses').html(calcs.total.buses + ' buses');
     this.$('.cost').html(cost);
     this.$('.revenueHours').html(revenueHours);

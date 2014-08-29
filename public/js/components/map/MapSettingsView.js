@@ -6,6 +6,7 @@ app.MapSettingsView = app.BaseView.extend({
     'click .closeSettings': 'closeSettings',
     'click .applyToAll': 'applySettingsToAll',
     'click .serviceHoursToggle': 'toggleServiceHours',
+    'click .metricUnitsToggle': 'toggleMetricUnits',
   },
 
   bindings: {
@@ -55,6 +56,7 @@ app.MapSettingsView = app.BaseView.extend({
   afterRender: function() {
     this.stickit();
     this.$('.serviceHoursToggle').toggleClass('enabled', this.model.get('preferServiceHours'));
+    this.$('.metricUnitsToggle').toggleClass('enabled', this.model.get('preferMetricUnits'));
   },
 
   applySettingsToAll: function() {
@@ -68,5 +70,10 @@ app.MapSettingsView = app.BaseView.extend({
   toggleServiceHours: function() {
     this.model.set('preferServiceHours', !this.model.get('preferServiceHours'));
     this.$('.serviceHoursToggle').toggleClass('enabled', this.model.get('preferServiceHours'));
+  },
+
+  toggleMetricUnits: function() {
+    this.model.set('preferMetricUnits', !this.model.get('preferMetricUnits'));
+    this.$('.metricUnitsToggle').toggleClass('enabled', this.model.get('preferMetricUnits'));
   },
 });

@@ -58,8 +58,15 @@ app.MapDetailsView = app.BaseView.extend({
       totalHours += calcs.total.revenueHours;
     });
 
+    var distance;
+    if (this.model.get('preferMetricUnits')) {
+      distance = app.utils.milesToKilometers(totalDistance).toFixed(2) + ' km';
+    } else {
+      distance = totalDistance.toFixed(2) + ' miles';
+    }
+
     this.$('.lineCount').html(lines.length);
-    this.$('.distance').html(totalDistance.toFixed(2));
+    this.$('.distance').html(distance);
     this.$('.buses').html(totalBuses);
     this.$('.cost').html(app.utils.formatCost(totalCost));
     this.$('.hours').html(app.utils.addCommas(totalHours));

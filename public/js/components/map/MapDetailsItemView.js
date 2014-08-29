@@ -11,13 +11,21 @@ app.MapDetailsItemView = app.BaseView.extend({
   },
 
   serialize: function() {
+    var map = this.model.collection.map;
     var attrs = _.clone(this.model.attributes);
     var calcs = this.model.getCalculations();
-    calcs.distance = calcs.distance.toFixed(2);
     calcs.totalCost = app.utils.formatCost(calcs.total.cost);
-    if (this.model.collection.map.get('preferServiceHours')) {
+
+    if (map.get('preferMetricUnits')) {
+      calcs.distance = app.utils.milesToKilometers(calcs.distance).toFixed(2) + ' km';
+    } else {
+      calcs.distance = calcs.distance.toFixed(2) + ' miles';
+    }
+
+    if (map.get('preferServiceHours')) {
       calcs.totalCost = app.utils.addCommas(calcs.total.revenueHours + ' hrs');
     }
+
     return _.extend(attrs, calcs);
   },
 

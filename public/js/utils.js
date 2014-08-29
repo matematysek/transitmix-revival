@@ -402,3 +402,7 @@ app.utils.naturalSort = function naturalSort (a, b) {
     }
     return 0;
 };
+
+app.utils.milesToKilometers = function(miles) {
+  return miles * 1.60934;
+};

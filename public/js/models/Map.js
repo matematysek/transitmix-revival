@@ -36,6 +36,7 @@ app.Map = Backbone.Model.extend({
 
       // TODO: Move to user-settings, when we have users
       preferServiceHours: false,
+      preferMetricUnits: true,
     };
   },
 
@@ -76,6 +77,7 @@ app.Map = Backbone.Model.extend({
       sundaysPerYear: response.sundays_per_year,
       
       preferServiceHours: response.prefer_service_hours,
+      preferMetricUnits: response.prefer_metric_units,
     };
 
     return app.utils.removeUndefined(attrs);
@@ -101,6 +103,7 @@ app.Map = Backbone.Model.extend({
       sundays_per_year: attrs.sundaysPerYear,
 
       prefer_service_hours: attrs.preferServiceHours,
+      prefer_metric_units: attrs.preferMetricUnits,
     };
   },
 

@@ -63,7 +63,7 @@
       {# } #}
       <div class="stats">
         This map: <label class="lineCount"></label> lines, 
-        <label class="distance"></label> miles, 
+        <label class="distance"></label>, 
         <label class="costWrapper"><label class="cost"></label> per year, </label>
         <label class="hoursWrapper"><label class="hours"></label> hrs / year, </label>
         <label class="buses"></label> buses at peak</div>
@@ -107,7 +107,7 @@
   <script type="text/template" id="tmpl-MapDetailsItemView">
     <div class="mapDetailsItemView" style="background:{{ color }}">
       <div class="name">{{ name }}</div>
-      <div class="stats">{{ distance }} miles • {{ total.buses }} buses • {{ totalCost }}</div>
+      <div class="stats">{{ distance }} • {{ total.buses }} buses • {{ totalCost }}</div>
     </div>
   </script>
 
@@ -150,7 +150,7 @@
     </div>
 
     <div class="outputs advancedOutputs mileageOutputs" style="background: {{ color3 }}">
-      <h2>Mileage:</h2>
+      <h2>Distance:</h2>
       <span class="halfDistance">1.80 miles</span> each way<br/>
       <p>Support for differing inbound and outbound lines coming soon.</p>
     </div>
@@ -216,7 +216,8 @@
 
       <div class="additional">
         <div class="item toggleParent serviceHoursToggle"><div class="toggle"></div> Show service hours, not cost</div>
-        <div class="item">&nbsp;</div><div class="item">&nbsp;</div>
+        <div class="item toggleParent metricUnitsToggle"><div class="toggle"></div> Use metric units (km)</div>
+        <div class="item">&nbsp;</div>
       </div>
     </div>
 
