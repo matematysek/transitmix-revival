@@ -11,9 +11,23 @@ app.MapSettingsView = app.BaseView.extend({
 
   bindings: {
     '.speed': {
-      observe: 'speed',
-      onGet: function(val) { return val.toFixed(1) + ' mph'; },
-      onSet: function(val) { return parseFloat(val); },
+      observe: ['speed', 'preferMetricUnits'],
+      onGet: function(values) {
+        if (this.model.get('preferMetricUnits')) {
+          return app.utils.milesToKilometers(values[0]).toFixed(1) + ' km/h';
+        } else {
+          return values[0].toFixed(1) + ' mph';
+        }
+      },
+      onSet: function(val) {
+        var distance;
+        if (this.model.get('preferMetricUnits')) {
+          distance = app.utils.kilometersToMiles(parseFloat(val));
+        } else {
+          distance = parseFloat(val);
+        }
+        return [distance, this.model.get('preferMetricUnits')];
+      },
     },
     '.layover': {
       observe: 'layover',

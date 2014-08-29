@@ -7,8 +7,22 @@ app.LineDetailsView = app.BaseView.extend({
     '.name': 'name',
     '.speed': {
       observe: 'speed',
-      onGet: function(val) { return val.toFixed(1) + ' mph'; },
-      onSet: function(val) { return parseFloat(val); },
+      onGet: function(val) {
+        var map = this.model.collection.map;
+        if (map.get('preferMetricUnits')) {
+          return app.utils.milesToKilometers(val).toFixed(1) + ' km/h';
+        } else {
+          return val.toFixed(1) + ' mph';
+        }
+      },
+      onSet: function(val) {
+        var map = this.model.collection.map;
+        if (map.get('preferMetricUnits')) {
+          return app.utils.kilometersToMiles(parseFloat(val));
+        } else {
+          return parseFloat(val);
+        }
+      },
     },
     '.layover': {
       observe: 'layover',
