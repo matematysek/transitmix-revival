@@ -95,29 +95,34 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // Geocode a city into a latlng and a more formalized city name 
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
- var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city);
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city);
+ 
+  $.getJSON(url, function(response) {
+    if (response.error || response.results.length === 0) {
+      console.log('Unable to geocode city. Womp Womp.', response.error);
+    }
+ 
+    // Get the coordinates for the center of the city
+    var location = response.results[0].geometry.location;
+    var latlng = [location.lat, location.lng];
+ 
+    // Get the city's name. In google maps this is called 'locality'
+    var name = city;
+    var preferMetric = true;
+    var components = response.results[0].address_components;
+    for (var i = 0; i < components.length; i++) {
+      var component = components[i];
+      if (_.contains(component.types, 'locality')) {
+        name = component.long_name;
+      }
 
- $.getJSON(url, function(response) {
-   if (response.error || response.results.length === 0) {
-     console.log('Unable to geocode city. Womp Womp.', response.error);
-   }
-
-   // Get the coordinates for the center of the city
-   var location = response.results[0].geometry.location;
-   var latlng = [location.lat, location.lng];
-
-   // Get the city's name. In google maps this is called 'locality'
-   var name = city;
-   var components = response.results[0].address_components;
-   for (var i = 0; i < components.length; i++) {
-     if (_.contains(components[i].types, 'locality')) {
-       name = components[i].long_name;
-       break;
-     }
-   }
-
-   callback.call(context || this, latlng, name);
- });
+      if (component.long_name === 'United States' || component.long_name === 'United Kingdom') {
+        preferMetric = false;
+      }
+    }
+ 
+    callback.call(context || this, latlng, name, preferMetric);
+  });
 };
 
 app.utils.getNearbyGTFS = function(latlng, callback, context) {  
@@ -401,4 +406,12 @@ app.utils.naturalSort = function naturalSort (a, b) {
         if (oFxNcL > oFyNcL) return 1;
     }
     return 0;
+};
+
+app.utils.milesToKilometers = function(miles) {
+  return miles * 1.60934;
+};
+
+app.utils.kilometersToMiles = function(kilometers) {
+  return kilometers * 0.621371;
 };

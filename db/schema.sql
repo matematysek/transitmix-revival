@@ -89,7 +89,8 @@ CREATE TABLE maps (
     weekdays_per_year integer DEFAULT 255,
     saturdays_per_year integer DEFAULT 55,
     sundays_per_year integer DEFAULT 55,
-    prefer_service_hours boolean
+    prefer_service_hours boolean,
+    prefer_metric_units boolean DEFAULT false
 );
 
 

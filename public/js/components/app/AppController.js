@@ -65,8 +65,12 @@ app.AppController = app.Controller.extend({
       this.mapController = new app.MapController({ map: map, router: this.router });
     };
 
-    app.utils.geocode(city, function(latlng, name) {
-      var map = new app.Map({ name: name, center: latlng });
+    app.utils.geocode(city, function(latlng, name, preferMetricUnits) {
+      var map = new app.Map({
+        name: name,
+        center: latlng,
+        preferMetricUnits: preferMetricUnits
+      });
       map.save({}, { success:  _.bind(afterCreate, this)});
     }, this);
   },

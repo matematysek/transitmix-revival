@@ -6,13 +6,28 @@ app.MapSettingsView = app.BaseView.extend({
     'click .closeSettings': 'closeSettings',
     'click .applyToAll': 'applySettingsToAll',
     'click .serviceHoursToggle': 'toggleServiceHours',
+    'click .metricUnitsToggle': 'toggleMetricUnits',
   },
 
   bindings: {
     '.speed': {
-      observe: 'speed',
-      onGet: function(val) { return val.toFixed(1) + ' mph'; },
-      onSet: function(val) { return parseFloat(val); },
+      observe: ['speed', 'preferMetricUnits'],
+      onGet: function(values) {
+        if (this.model.get('preferMetricUnits')) {
+          return app.utils.milesToKilometers(values[0]).toFixed(1) + ' km/h';
+        } else {
+          return values[0].toFixed(1) + ' mph';
+        }
+      },
+      onSet: function(val) {
+        var distance;
+        if (this.model.get('preferMetricUnits')) {
+          distance = app.utils.kilometersToMiles(parseFloat(val));
+        } else {
+          distance = parseFloat(val);
+        }
+        return [distance, this.model.get('preferMetricUnits')];
+      },
     },
     '.layover': {
       observe: 'layover',
@@ -55,6 +70,7 @@ app.MapSettingsView = app.BaseView.extend({
   afterRender: function() {
     this.stickit();
     this.$('.serviceHoursToggle').toggleClass('enabled', this.model.get('preferServiceHours'));
+    this.$('.metricUnitsToggle').toggleClass('enabled', this.model.get('preferMetricUnits'));
   },
 
   applySettingsToAll: function() {
@@ -68,5 +84,10 @@ app.MapSettingsView = app.BaseView.extend({
   toggleServiceHours: function() {
     this.model.set('preferServiceHours', !this.model.get('preferServiceHours'));
     this.$('.serviceHoursToggle').toggleClass('enabled', this.model.get('preferServiceHours'));
+  },
+
+  toggleMetricUnits: function() {
+    this.model.set('preferMetricUnits', !this.model.get('preferMetricUnits'));
+    this.$('.metricUnitsToggle').toggleClass('enabled', this.model.get('preferMetricUnits'));
   },
 });
