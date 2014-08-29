@@ -101,8 +101,6 @@ app.utils.geocode = function(city, callback, context) {
     if (response.error || response.results.length === 0) {
       console.log('Unable to geocode city. Womp Womp.', response.error);
     }
-    console.log(response);
-    console.log(response.results[0]);
  
     // Get the coordinates for the center of the city
     var location = response.results[0].geometry.location;
