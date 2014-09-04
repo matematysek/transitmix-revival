@@ -21,7 +21,7 @@
   <link href="http://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css" rel="stylesheet" />
 
   <!-- our fresh styles -->
-  <%= css :app %>
+  <link rel="stylesheet" type="text/css" href="<%= asset_path 'application.css' %>">
 </head>
 <body>
   <p class="description">A sketching tool for transit planners. Transitmix makes it easy to draw new transit lines, understand the underlying costs, and share ideas with the public. Start designing your perfect transit map today!</p>
@@ -232,7 +232,7 @@
   <script src="//api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js"></script>
 
   <!-- the finest quality javascripts -->
-  <%= js :app %>
+  <script type="text/javascript" src="<%= asset_path 'application.js' %>"></script>
 
   <% if ENV['GOOGLE_ANALYTICS'] %>
     <script>

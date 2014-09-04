@@ -11,14 +11,14 @@
 #   - dist/**/*.js
 #
 src_files:
-  - public/deps/jquery.min.js
-  - public/deps/underscore-min.js
-  - public/deps/backbone-min.js
-  - public/js/app.js
-  - public/js/framework/*.js
-  - public/js/models/*.js
-  - public/js/collections/*.js
-  - public/js/**/*.js
+  - app/assets/deps/jquery.min.js
+  - app/assets/deps/underscore-min.js
+  - app/assets/deps/backbone-min.js
+  - app/assets/js/app.js
+  - app/assets/js/framework/*.js
+  - app/assets/js/models/*.js
+  - app/assets/js/collections/*.js
+  - app/assets/js/**/*.js
 
 # stylesheets
 #
@@ -32,7 +32,7 @@ src_files:
 #   - stylesheets/*.css
 #
 stylesheets:
-  - stylesheets/**/*.css
+  - app/assets/css/**/*.css
 
 # helpers
 #
