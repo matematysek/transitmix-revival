@@ -30,23 +30,23 @@ Transitmix is a Ruby application with a PostgreSQL database.
 Using the command line, clone Transmitmix from Github and prepare the database:
    
 ```console
-git clone https://github.com/codeforamerica/transitmix.git
-cd transitmix
-cp .env.sample .env
-bundle install
-rake db:create db:migrate
-rake db:create db:migrate DATABASE_URL=postgres://localhost/transitmix_test
-bundle exec rackup
+$ git clone https://github.com/codeforamerica/transitmix.git
+$ cd transitmix
+$ cp .env.sample .env
+$ bundle install
+$ rake db:create db:migrate
+$ rake db:create db:migrate DATABASE_URL=postgres://localhost/transitmix_test
+$ bundle exec rackup
 ```
 
 ### Deploying to Heroku
 
 ```console
-heroku create <app name>
-heroku addons:add heroku-postgresql
-git push heroku master
-heroku run rake db:migrate
-heroku open
+$ heroku create <app name>
+$ heroku addons:add heroku-postgresql
+$ git push heroku master
+$ heroku run rake db:migrate
+$ heroku open
 ```
 
 ### Additional Setup Notes
