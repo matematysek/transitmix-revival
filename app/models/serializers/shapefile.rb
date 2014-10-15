@@ -4,6 +4,7 @@ require 'geo_ruby/shp4r/shp'
 require 'zip'
 
 class Shapefile < Struct.new(:map)
+  PROJ = %{GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]}.freeze
   TMP_DIR = Transitmix::App.root + '/tmp'
 
   def shpfile
@@ -58,8 +59,12 @@ class Shapefile < Struct.new(:map)
     }))
   end
 
+  def build_projection
+    File.write(TMP_DIR + '/' + "#{map.id}.prj", PROJ)
+  end
+
   def build_zipfile
-    filenames = ["#{map.id}.shp", "#{map.id}.shx", "#{map.id}.dbf", "#{map.id}.json"]
+    filenames = ["#{map.id}.shp", "#{map.id}.shx", "#{map.id}.dbf", "#{map.id}.json", "#{map.id}.prj"]
     zipfile_name = TMP_DIR + "/#{map.id}.zip"
 
     Zip.continue_on_exists_proc = true
@@ -73,6 +78,7 @@ class Shapefile < Struct.new(:map)
   def call
     build_shpfile
     build_geom2gtfs_json
+    build_projection
     build_zipfile
 
     File.read(TMP_DIR + "/#{map.id}.zip") 
