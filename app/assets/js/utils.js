@@ -16,8 +16,8 @@ app.utils.getRoute = function(options, callback, context) {
 
   // Preferentially rely on mapzen's OSRM server. If it's failed,
   // switch to Mapbox Smart Directions.
-  var routingEngine = app.utils._mapzenRouting;
-  if (!app.utils._mapzenEndpointWorking) routingEngine = app.utils._mapboxRouting;
+  var routingEngine = app.utils._mapboxRouting;
+//  if (!app.utils._mapzenEndpointWorking) routingEngine = app.utils._mapboxRouting;
   routingEngine(waypoints, callback, context);
 };
 
@@ -50,7 +50,7 @@ app.utils._mapboxRouting = function(waypoints, callback, context) {
   };
 
   waypoints = waypoints.map(flip).join(';');
-  var url = 'http://api.tiles.mapbox.com/v4/' +
+  var url = 'https://api.tiles.mapbox.com/v4/' +
   'directions/mapbox.driving/' + waypoints + '.json?geometry=polyline&access_token=pk.eyJ1IjoidGFubmVyaG9kZ2VzIiwiYSI6Ijk4NzA0Yjk3NDYwNWUwNWE2NGQzNjI1NjczZjQ3ZTEwIn0.xJPxZDCXsZAJ0Nlc8sxteA';
 
   $.getJSON(url, function(response) {
