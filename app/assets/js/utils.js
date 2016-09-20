@@ -50,8 +50,8 @@ app.utils._mapboxRouting = function(waypoints, callback, context) {
   };
 
   waypoints = waypoints.map(flip).join(';');
-  var url = 'http://api.tiles.mapbox.com/v3/codeforamerica.h6mlbj75/' +
-  'directions/driving/' + waypoints + '.json?geometry=polyline';
+  var url = 'http://api.tiles.mapbox.com/v4/' +
+  'directions/mapbox.driving/' + waypoints + '.json?geometry=polyline&access_token=pk.eyJ1IjoidGFubmVyaG9kZ2VzIiwiYSI6Ijk4NzA0Yjk3NDYwNWUwNWE2NGQzNjI1NjczZjQ3ZTEwIn0.xJPxZDCXsZAJ0Nlc8sxteA';
 
   $.getJSON(url, function(response) {
     if (response.error || response.routes.length === 0) {
