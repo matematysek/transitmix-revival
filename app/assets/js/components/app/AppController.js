@@ -16,7 +16,7 @@ app.AppController = app.Controller.extend({
       infoControl: false,
       boxZoom: false,
     };
-    app.leaflet = L.mapbox.map('map', window.appConfig.mapboxId, options);
+    app.leaflet = L.mapbox.map('map', 'tannerhodges.c032a577', options);
 
     this.feedbackView = new app.FeedbackView();
     $('body').append(this.feedbackView.render().el);
