@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
-ruby '2.3.2'
+ruby '2.4.4'
 
 gem 'airbrake', require: false
 gem 'dbf'
 gem 'dedent'
 gem 'dotenv'
 gem 'georuby'
-gem 'grape', '~> 0.7'
+gem 'grape', '~> 0.7', '< 0.10.0'
 gem 'newrelic_rpm'
 gem 'pg', '~> 0.17'
 gem 'rake'
@@ -18,7 +18,7 @@ gem 'sequel', '~> 4.10'
 gem 'sinatra', '~> 1.4'
 gem 'sprockets', '~> 2.12'
 gem 'uglifier', '~> 2.5'
-gem 'unicorn'
+gem 'thin'
 
 group :test do
   gem 'database_cleaner'
