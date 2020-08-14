@@ -95,7 +95,7 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // Geocode a city into a latlng and a more formalized city name 
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
-  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city) + '&key=AIzaSyA_Clyz3478YAUnsESNHE5dyktvvMoa-vw';
+  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city) + '&key=AIzaSyDtWJ1SNDv5ihQnErxLwbgiHyflWaUvX34';
  
   $.getJSON(url, function(response) {
     if (response.error || response.results.length === 0) {

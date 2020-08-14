@@ -1,38 +1,40 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.1)
+    activesupport (6.0.3.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    airbrake (7.4.0)
-      airbrake-ruby (~> 2.12)
-    airbrake-ruby (2.12.0)
+      zeitwerk (~> 2.2, >= 2.2.2)
+    airbrake (10.0.5)
+      airbrake-ruby (~> 4.13)
+    airbrake-ruby (4.15.0)
+      rbtree3 (~> 0.5)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    builder (3.2.3)
-    byebug (10.0.2)
+    builder (3.2.4)
+    byebug (11.1.3)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    concurrent-ruby (1.0.5)
-    daemons (1.2.6)
-    database_cleaner (1.7.0)
-    dbf (3.1.3)
+    concurrent-ruby (1.1.7)
+    daemons (1.3.1)
+    database_cleaner (1.8.5)
+    dbf (4.1.2)
     dedent (1.0.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
-    diff-lcs (1.3)
-    dotenv (2.5.0)
+    diff-lcs (1.4.4)
+    dotenv (2.7.6)
     equalizer (0.0.11)
     eventmachine (1.2.7-x64-mingw32)
     execjs (2.7.0)
     factory_girl (4.9.0)
       activesupport (>= 3.0.0)
-    ffaker (2.10.0)
-    ffi (1.9.25-x64-mingw32)
+    ffaker (2.16.0)
+    ffi (1.13.1-x64-mingw32)
     georuby (2.5.2)
     grape (0.9.0)
       activesupport
@@ -44,28 +46,28 @@ GEM
       rack-accept
       rack-mount
       virtus (>= 1.0.0)
-    hashie (3.6.0)
+    hashie (4.1.0)
     hike (1.2.3)
-    i18n (1.1.1)
+    i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
-    jasmine (3.2.0)
-      jasmine-core (= 3.2.0)
+    jasmine (3.6.0)
+      jasmine-core (~> 3.6.0)
       phantomjs
       rack (>= 1.2.1)
       rake
-    jasmine-core (3.2.0)
-    json (2.1.0)
-    mini_portile2 (2.3.0)
-    minitest (5.11.3)
-    multi_json (1.13.1)
+    jasmine-core (3.6.0)
+    json (2.3.1)
+    mini_portile2 (2.4.0)
+    minitest (5.14.1)
+    multi_json (1.15.0)
     multi_xml (0.6.0)
-    newrelic_rpm (5.4.0.347)
-    nokogiri (1.8.5-x64-mingw32)
-      mini_portile2 (~> 2.3.0)
-    pg (0.21.0-x64-mingw32)
+    newrelic_rpm (6.12.0.367)
+    nokogiri (1.10.10-x64-mingw32)
+      mini_portile2 (~> 2.4.0)
+    pg (1.2.3-x64-mingw32)
     phantomjs (2.1.1.0)
-    rack (1.6.10)
+    rack (1.6.13)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-mount (0.8.3)
@@ -74,10 +76,11 @@ GEM
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rake (12.3.1)
-    rb-fsevent (0.10.3)
-    rb-inotify (0.9.10)
-      ffi (>= 0.5.0, < 2)
+    rake (13.0.1)
+    rb-fsevent (0.10.4)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
+    rbtree3 (0.6.0)
     rspec (2.99.0)
       rspec-core (~> 2.99.0)
       rspec-expectations (~> 2.99.0)
@@ -89,13 +92,13 @@ GEM
     ruby_kml (0.1.7)
       builder
       nokogiri
-    rubyzip (1.2.2)
-    sass (3.6.0)
+    rubyzip (2.3.0)
+    sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sequel (4.49.0)
+    sequel (5.35.0)
     sinatra (1.4.8)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -111,7 +114,7 @@ GEM
       rack (>= 1, < 3)
     thread_safe (0.3.6)
     tilt (1.4.1)
-    tzinfo (1.2.5)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
     uglifier (2.7.2)
       execjs (>= 0.3.0)
@@ -121,6 +124,7 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    zeitwerk (2.4.0)
 
 PLATFORMS
   x64-mingw32
@@ -138,22 +142,21 @@ DEPENDENCIES
   grape (~> 0.7, < 0.10.0)
   jasmine
   newrelic_rpm
-  pg (~> 0.17)
+  pg (~> 1.0)
   rack-test
   rake
   rspec (~> 2.14)
   ruby_kml
   rubyzip
   sass (~> 3.3)
-  sequel (~> 4.10)
+  sequel (~> 5.0)
   sinatra (~> 1.4)
   sprockets (~> 2.12)
   thin
   uglifier (~> 2.5)
-  unicorn
 
 RUBY VERSION
-   ruby 2.4.4p296
+   ruby 2.7.1p83
 
 BUNDLED WITH
-   1.16.6
+   2.1.4

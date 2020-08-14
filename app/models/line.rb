@@ -5,6 +5,7 @@ module Transitmix
       plugin :json_serializer
       plugin :serialization, :json, :coordinates
       plugin :serialization, :json, :service_windows
+      plugin :whitelist_security
 
       set_allowed_columns :coordinates, :name, :speed, :color, :map_id, 
                           :service_windows, :weekdays_per_year, :saturdays_per_year,

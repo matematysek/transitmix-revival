@@ -17,7 +17,9 @@ app.AppController = app.Controller.extend({
       boxZoom: false,
     };
     L.mapbox.accessToken = 'pk.eyJ1IjoidGFubmVyaG9kZ2VzIiwiYSI6Ijk4NzA0Yjk3NDYwNWUwNWE2NGQzNjI1NjczZjQ3ZTEwIn0.xJPxZDCXsZAJ0Nlc8sxteA';
-    app.leaflet = L.mapbox.map('map', 'tannerhodges.c032a577');
+    app.leaflet = L.mapbox.map('map')
+      .setView([40, -74.50], 9)
+      .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11'));
 
     this.feedbackView = new app.FeedbackView();
     $('body').append(this.feedbackView.render().el);

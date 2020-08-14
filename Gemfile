@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.4.4'
+ruby '2.7.1'
 
 gem 'airbrake', require: false
 gem 'dbf'
@@ -9,12 +9,12 @@ gem 'dotenv'
 gem 'georuby'
 gem 'grape', '~> 0.7', '< 0.10.0'
 gem 'newrelic_rpm'
-gem 'pg', '~> 0.17'
+gem 'pg', '~> 1.0'
 gem 'rake'
 gem 'rubyzip'
 gem 'ruby_kml'
 gem 'sass', '~> 3.3'
-gem 'sequel', '~> 4.10'
+gem 'sequel', '~> 5.0'
 gem 'sinatra', '~> 1.4'
 gem 'sprockets', '~> 2.12'
 gem 'uglifier', '~> 2.5'
