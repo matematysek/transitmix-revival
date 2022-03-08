@@ -49,6 +49,15 @@ heroku run rake db:migrate
 heroku open
 ```
 
+### Deploying with Docker
+
+```console
+docker build -t transitmix .
+docker run -d --name transitmix_postgres -e POSTGRES_PASSWORD=mypass -e POSTGRES_USER=transit postgres:14
+docker run -it --rm -e DATABASE_URL=postgres://transit:mypass@transitmix_postgres/transit transitmix rake db:create db:migrate
+docker run -d -p 9292:9292 -e DATABASE_URL=postgres://transit:mypass@transitmix_postgres/transit -e MAP_ID=MAPBOX_API_KEY transitmix
+```
+
 ### Additional Setup Notes
 
 #### Error Logging
