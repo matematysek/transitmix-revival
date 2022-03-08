@@ -95,31 +95,22 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // Geocode a city into a latlng and a more formalized city name 
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
-  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city) + '&key=AIzaSyDtWJ1SNDv5ihQnErxLwbgiHyflWaUvX34';
+  var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(city) + '&limit=1&format=jsonv2';
  
   $.getJSON(url, function(response) {
-    if (response.error || response.results.length === 0) {
+    if (response.length === 0) {
       console.log('Unable to geocode city. Womp Womp.', response.error);
     }
  
-    // Get the coordinates for the center of the city
-    var location = response.results[0].geometry.location;
-    var latlng = [location.lat, location.lng];
- 
-    // Get the city's name. In google maps this is called 'locality'
-    var name = city;
-    var preferMetric = true;
-    var components = response.results[0].address_components;
-    for (var i = 0; i < components.length; i++) {
-      var component = components[i];
-      if (_.contains(component.types, 'locality')) {
-        name = component.long_name;
-      }
+    var result = response[0];
 
-      if (component.long_name === 'United States' || component.long_name === 'United Kingdom') {
-        preferMetric = false;
-      }
-    }
+    // Get the coordinates for the center of the city
+    var latlng = [parseFloat(result.lat), parseFloat(result.lon)];
+ 
+    // Get the city's name
+    var name = city;
+    var fullName = result.display_name;
+    var preferMetric = !fullName.includes('United States') && !fullName.includes('United Kingdom');
  
     callback.call(context || this, latlng, name, preferMetric);
   });
