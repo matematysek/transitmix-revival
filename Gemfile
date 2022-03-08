@@ -18,6 +18,7 @@ gem 'sequel', '~> 5.0'
 gem 'sinatra', '~> 1.4'
 gem 'sprockets', '~> 2.12'
 gem 'uglifier', '~> 2.5'
+gem 'therubyracer'
 gem 'thin'
 
 group :test do
