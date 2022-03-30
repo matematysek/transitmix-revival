@@ -51,7 +51,7 @@ app.utils._mapboxRouting = function(waypoints, callback, context) {
 
   waypoints = waypoints.map(flip).join(';');
   var url = 'https://api.tiles.mapbox.com/v4/' +
-  'directions/mapbox.driving/' + waypoints + '.json?geometry=polyline&access_token=pk.eyJ1IjoidGFubmVyaG9kZ2VzIiwiYSI6Ijk4NzA0Yjk3NDYwNWUwNWE2NGQzNjI1NjczZjQ3ZTEwIn0.xJPxZDCXsZAJ0Nlc8sxteA';
+  'directions/mapbox.driving/' + waypoints + '.json?geometry=polyline&access_token=' + appConfig.mapboxId;
 
   $.getJSON(url, function(response) {
     if (response.error || response.routes.length === 0) {

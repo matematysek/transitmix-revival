@@ -16,7 +16,7 @@ app.AppController = app.Controller.extend({
       infoControl: false,
       boxZoom: false,
     };
-    L.mapbox.accessToken = 'pk.eyJ1IjoidGFubmVyaG9kZ2VzIiwiYSI6Ijk4NzA0Yjk3NDYwNWUwNWE2NGQzNjI1NjczZjQ3ZTEwIn0.xJPxZDCXsZAJ0Nlc8sxteA';
+    L.mapbox.accessToken = appConfig.mapboxId;
     app.leaflet = L.mapbox.map('map')
       .setView([40, -74.50], 9)
       .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11'));
