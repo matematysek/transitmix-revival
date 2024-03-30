@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.7.1'
+ruby '3.3.0'
 
 gem 'airbrake', require: false
 gem 'dbf'
