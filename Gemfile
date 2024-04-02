@@ -14,7 +14,7 @@ gem 'rake'
 gem 'rubyzip'
 gem 'ruby_kml'
 gem 'sass', '~> 3.7.4'
-gem 'sequel', '~> 5.0'
+gem 'sequel',
 gem 'sinatra', '~> 1.4'
 gem 'sprockets', '~> 2.12'
 gem 'uglifier', '~> 2.5'
