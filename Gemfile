@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '3.0.2'
+ruby '3.3.0'
 
-gem 'airbrake', require: false
+gem 'airbrake'
 gem 'dbf'
 gem 'dedent'
 gem 'dotenv'
