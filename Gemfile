@@ -9,7 +9,7 @@ gem 'dotenv'
 gem 'georuby'
 gem 'grape', '~> 2.0.0
 gem 'newrelic_rpm'
-gem 'pg', '~> 1.0'
+gem 'pg', '~> 1.5.6'
 gem 'rake'
 gem 'rubyzip'
 gem 'ruby_kml'
