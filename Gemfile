@@ -7,17 +7,17 @@ gem 'dbf'
 gem 'dedent'
 gem 'dotenv'
 gem 'georuby'
-gem 'grape', '~> 2.0.0
+gem 'grape'
 gem 'newrelic_rpm'
-gem 'pg', '~> 1.5.6'
+gem 'pg'
 gem 'rake'
 gem 'rubyzip'
 gem 'ruby_kml'
-gem 'sass', '~> 3.7.4'
-gem 'sequel',
-gem 'sinatra', '~> 1.4.7'
-gem 'sprockets', '~> 2.12'
-gem 'uglifier', '~> 2.5'
+gem 'sass'
+gem 'sequel'
+gem 'sinatra'
+gem 'sprockets'
+gem 'uglifier'
 gem 'thin'
 
 group :test do
@@ -26,6 +26,6 @@ group :test do
   gem 'factory_girl'
   gem 'ffaker'
   gem 'rack-test'
-  gem 'rspec', '~> 2.14'
+  gem 'rspec'
   gem 'jasmine'
 end
