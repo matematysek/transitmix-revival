@@ -1,6 +1,6 @@
 module Transitmix
   module Routes
-    class Maps < Grape::API
+    class Maps < RestClient::API
       version 'v1', using: :header, vendor: 'transitmix'
       format :json
       content_type :zip, 'application/octet-stream'

@@ -1,6 +1,6 @@
 module Transitmix
   module Routes
-    class Status < Grape::API
+    class Status < RestClient::API
       format :json
 
       get '/.well-known/status' do

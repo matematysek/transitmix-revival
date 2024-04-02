@@ -1,6 +1,6 @@
 module Transitmix
   module Routes
-    class Lines < Grape::API
+    class Lines < RestClient::API
       version 'v1', using: :header, vendor: 'transitmix'
       format :json
 
