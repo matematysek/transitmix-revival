@@ -7,7 +7,7 @@ gem 'dbf'
 gem 'dedent'
 gem 'dotenv'
 gem 'georuby'
-gem 'grape', '~> 0.7', '< 0.10.0'
+gem 'grape', '~> 2.0.0
 gem 'newrelic_rpm'
 gem 'pg', '~> 1.0'
 gem 'rake'
