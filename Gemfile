@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 ruby '3.3.0'
 
-gem 'airbrake'
 gem 'dbf'
 gem 'dedent'
 gem 'dotenv'
