@@ -17,6 +17,7 @@ gem 'sass'
 gem 'sequel'
 gem 'sinatra'
 gem 'sprockets'
+gem 'therubyrhino'
 gem 'uglifier'
 
 group :test do
