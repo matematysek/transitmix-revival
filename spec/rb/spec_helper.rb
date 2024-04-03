@@ -1,4 +1,3 @@
-require 'debugger'
 require 'factory_girl'
 require 'ffaker'
 require 'rspec'
