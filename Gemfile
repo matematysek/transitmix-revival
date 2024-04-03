@@ -11,14 +11,13 @@ gem 'pg'
 gem 'rake'
 gem 'rest-client'
 gem 'rbtree'
-gem 'rubyzip'
+gem 'rubyzip' ~> 2.3.0
 gem 'ruby_kml'
 gem 'sass'
 gem 'sequel'
 gem 'sinatra'
 gem 'sprockets'
 gem 'uglifier'
-gem 'thin'
 
 group :test do
   gem 'database_cleaner'
