@@ -1,4 +1,3 @@
-require 'factory_girl'
 require 'ffaker'
 require 'rspec'
 require 'rack/test'
